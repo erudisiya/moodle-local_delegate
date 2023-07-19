@@ -23,51 +23,78 @@
  */
 require_once(__DIR__ . '/../../config.php');
 GLOBAL $DB, $CFG;
-$id = optional_param('id', 0, PARAM_INT);//course id
+require_once("$CFG->libdir/formslib.php");
+require_once($CFG->dirroot . '/local/delegate/lib.php');
+//include delegate_application_form.php
+require_once($CFG->dirroot . '/local/delegate/delegate_application_form.php');
+$id = optional_param('id', 0, PARAM_INT);//delegatee id
+$courseid = optional_param('courseid', 0, PARAM_INT);//course id
 
-
+$coursedetails = get_course($courseid);
 
 $PAGE->set_pagelayout('standard');
 $PAGE->navbar->add(get_string("myhome"), new moodle_url('/my'));
+$PAGE->navbar->add($coursedetails->shortname, new moodle_url('/course/view.php', array('id' => $courseid)));
+$PAGE->navbar->add(get_string("list"), new moodle_url('/local/delegate/list.php?courseid='.$courseid));
+$PAGE->navbar->add(get_string("edit"));
 if ($id){
     $course = get_course($id);
     $PAGE->set_context(context_course::instance($course->id));
     $PAGE->navbar->add($course->shortname, new moodle_url('/course/view.php?id='.$id));
     $PAGE->navbar->add(get_string("allaap", "local_delegate"), new moodle_url('/local/delegate/list.php?id='.$id));
+    $form = new moodle_url('/local/delegate/list.php', array('id' => $id, 'courseid' => $courseid));
 } else {
     $PAGE->set_context(context_system::instance());
+    $form = $CFG->wwwroot . "/local/delegate/list.php?courseid=".$courseid;
 }
 
-$PAGE->navbar->add(get_string("pluginname", "local_delegate"));
-$PAGE->set_url($CFG->wwwroot."/local/delegate/edit.php");
+$PAGE->set_url($CFG->wwwroot."/local/delegate/list.php");
 
 $PAGE->set_title(get_string('applystr', 'local_delegate'));
 require_login();
+$tab = html_writer::start_tag('ul', array('class' => 'rui-nav-tabs nav nav-tabs'));
+    $tab .= html_writer::start_tag('li', array('class' => 'nav-item'));
+        $tab .= html_writer::start_tag('a', array('class' => 'nav-link','title'=>"All Application List", 'href'=>$form));
+            $tab .= get_string('allaap', 'local_delegate');
+        $tab .= html_writer::end_tag('a');
 
-require_once("$CFG->libdir/formslib.php");
-//include edit_form.php
-require_once($CFG->dirroot . '/local/delegate/delegate_application_form.php');
+    $tab .= html_writer::end_tag('li');
 
-if (isset($id) && ($id > 0)){
-    $customdata = array('id' => $id);
-    //Instantiate simplehtml_form 
+    $tab .= html_writer::start_tag('li', array('class' => 'nav-item'));
+        $tab .= html_writer::start_tag('a', array('class' => 'nav-link active','title'=>"New Application Form"));
+            $tab .= get_string('application', 'local_delegate');
+        $tab .= html_writer::end_tag('a');
+
+    $tab .= html_writer::end_tag('li');
+$tab .= html_writer::end_tag('ul');
+
+
+if ($courseid){
+    $customdata = array('id' => $id, 'courseid' => $courseid);
     $mform = new delegate_application_form(null, $customdata);
 } else {
-    //Instantiate simplehtml_form 
-    $mform = new delegate_application_form();
+    $customdata = array('courseid' => $courseid);
+    $mform = new delegate_application_form(null, $customdata);
 }
 
+    
 
 //Form processing and displaying is done here
 if ($mform->is_cancelled()) {
     //Handle form cancel operation, if cancel button is present on form
     redirect($CFG->wwwroot."/local/delegate/list.php");
 } else if ($fromform = $mform->get_data()) {
+    
     $now=time();
     $delegateobj =  new stdClass();
     $delegateobj->delegator = $USER->id;
     $delegateobj->delegatee = $fromform->delegatee;
-    $delegateobj->courses = implode(",", $fromform->courses);
+    if(is_array($fromform->courseid)){
+        $delegateobj->courses = implode(",", $fromform->courseid);
+    } else {
+        $delegateobj->courses = $fromform->courseid;
+    }
+    
     $delegateobj->user_role_id = 0;
     $delegateobj->start_date = $fromform->startdate;
     $delegateobj->end_date = $fromform->enddate;
@@ -77,6 +104,8 @@ if ($mform->is_cancelled()) {
     $delegateobj->apply_date_time = $now;
     $delegateobj->approved_date = "-";
     $delegateobj->approved_by = "-";
+    $delegateobj->modifyed_by = $USER->id;
+    $delegateobj->modify_datetime = $now;
     $delegateobj->action = 0;//0 = pending, 1 = approved, 2 = decline
 
     //print_r($delegateobj);die;
@@ -86,13 +115,14 @@ if ($mform->is_cancelled()) {
         $existingdelegate = $DB->get_record('local_delegate', array("id" => $fromform->id));
         $delegateobj->id = $fromform->id;
         $record = $DB->update_record('local_delegate', $delegateobj, true);
+        send_notification($delegateobj->delegatee);
     } else {
         
         $record = $DB->insert_record('local_delegate', $delegateobj, true);
-
+        send_notification($delegateobj->delegatee);
     }
     
-    redirect($CFG->wwwroot."/local/delegate/list.php");
+    redirect($CFG->wwwroot."/local/delegate/list.php?courseid=".$courseid);
   //In this case you process validated data. $mform->get_data() returns data posted in form.
 } else {
 
@@ -111,6 +141,7 @@ if ($mform->is_cancelled()) {
   //$mform->set_data($toform);
   //displays the form
   echo $OUTPUT->header();
+  echo $tab;
   $mform->display();
   echo $OUTPUT->footer();
 }

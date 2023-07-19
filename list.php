@@ -25,16 +25,24 @@ require_once(__DIR__ . '/../../config.php');
 
 GLOBAL $DB, $CFG;
 
+$courseid = optional_param('courseid', 0, PARAM_INT);//course id
 $PAGE->set_pagelayout('report');
 $PAGE->set_url($CFG->wwwroot."/local/delegate/list.php");
-$id = optional_param('id', 0, PARAM_INT);//course id
+$coursedetails = get_course($courseid);
+$PAGE->navbar->add(get_string("myhome"), new moodle_url('/my'));
+$PAGE->navbar->add($coursedetails->shortname, new moodle_url('/course/view.php?id='.$courseid));
+$PAGE->navbar->add(get_string("list"));
+$id = optional_param('id', 0, PARAM_INT);//delegate id
+$courseid = optional_param('courseid', 0, PARAM_INT);//course id
+$course = get_course($courseid);
+$PAGE->set_context(context_course::instance($course->id));
 if ($id) {
-    $course = get_course($id);
-    $PAGE->set_context(context_course::instance($course->id));
-    $form = $CFG->wwwroot . "/local/delegate/edit.php?id=".$id;
+    $form = $CFG->wwwroot . "/local/delegate/edit.php?id=?".$id."&courseid=".$courseid;
 } else {
-    $PAGE->set_context(context_system::instance());
+    $form = $CFG->wwwroot . "/local/delegate/edit.php?courseid=".$courseid;
 }
+
+
 $PAGE->set_title("Request for Delegate");
 $PAGE->set_heading("Request for Delegate");
 require_login();
@@ -68,6 +76,11 @@ if ($action == 'delete') {
 }
 
 $delrecords = $DB->get_records('local_delegate',['status' => '0']);
+/*$rs = $DB->get_recordset(....);
+foreach ($rs as $record) {
+    // Do whatever you want with this record
+}
+$rs->close();*/
 /*echo "<pre>";
 print_r($delrecords);die;*/
 $table = new html_table();
@@ -88,10 +101,11 @@ $table->head = array(
 $table->align = array('center','center','center','center','center','center','center','center');
 
 foreach ($delrecords as $key => $delrecord) {
-    $delete = $CFG->wwwroot."/local/delegate/list.php?action=delete&id=".$delrecord->id;
-    $edit = $CFG->wwwroot."/local/delegate/edit.php?action=update&id=".$delrecord->id;
-    $approve = $CFG->wwwroot."/local/delegate/approve.php?action=approve&id=".$delrecord->id;
-    $decline = $CFG->wwwroot."/local/delegate/decline.php?action=decline&id=".$delrecord->id;
+    $delete = new moodle_url('/local/delegate/list.php', array('id' => $delrecord->id, 'courseid' => $courseid, 'action' => 'delete'));
+    $edit = new moodle_url('/local/delegate/edit.php', array('id' => $delrecord->id, 'courseid' => $courseid, 'action' => 'update'));
+    $approve = new moodle_url('/local/delegate/approve.php', array('id' => $delrecord->id, 'courseid' => $courseid, 'action' => 'approve'));
+    $decline = new moodle_url('/local/delegate/decline.php', array('id' => $delrecord->id, 'courseid' => $courseid, 'action' => 'decline'));
+    
 
     $courseids = explode(",", $delrecord->courses);
     //print_r($delrecord);die;
@@ -123,9 +137,9 @@ foreach ($delrecords as $key => $delrecord) {
     
     if($delrecord->action == 0){
         $actionstr ='Pending';
-    }elseif($delrecord->action == 1){
+    } elseif($delrecord->action == 1){
        $actionstr ='Approved';
-    }elseif($delrecord->action == 2){
+    } elseif($delrecord->action == 2){
        $actionstr ='Declined';
     };
     
@@ -138,11 +152,11 @@ foreach ($delrecords as $key => $delrecord) {
     $dgeteename .= html_writer::end_tag('a');
 
     if (is_siteadmin()){
-        $action = html_writer::start_tag('a', array('href' => $approve));
+        $action = html_writer::start_tag('a', array('href' => $decline));
         $action .= html_writer::start_tag('i', array('class' => 'fa fa-window-close','aria-hidden'=>'true'));
         $action .= html_writer::end_tag('i');   
     $action .= html_writer::end_tag('a').'&nbsp';
-    $action .= html_writer::start_tag('a', array('href' => $decline ));
+    $action .= html_writer::start_tag('a', array('href' => $approve ));
         $action .= html_writer::start_tag('i', array('class' => 'fa fa-check-square','aria-hidden'=>'true'));
         $action .= html_writer::end_tag('i');   
     $action .= html_writer::end_tag('a');
@@ -177,28 +191,28 @@ foreach ($delrecords as $key => $delrecord) {
 
 
 
-$tab1 = html_writer::start_tag('ul', array('class' => 'rui-nav-tabs nav nav-tabs'));
-    $tab1 .= html_writer::start_tag('li', array('class' => 'nav-item'));
-        $tab1 .= html_writer::start_tag('a', array('class' => 'nav-link active','title'=>"All Application List"));
-            $tab1 .= get_string('allaap', 'local_delegate');
-        $tab1 .= html_writer::end_tag('a');
+$tab = html_writer::start_tag('ul', array('class' => 'rui-nav-tabs nav nav-tabs'));
+    $tab .= html_writer::start_tag('li', array('class' => 'nav-item'));
+        $tab .= html_writer::start_tag('a', array('class' => 'nav-link active','title'=>"All Application List"));
+            $tab .= get_string('allaap', 'local_delegate');
+        $tab .= html_writer::end_tag('a');
 
-    $tab1 .= html_writer::end_tag('li');
+    $tab .= html_writer::end_tag('li');
 
-    $tab1 .= html_writer::start_tag('li', array('class' => 'nav-item'));
-        $tab1 .= html_writer::start_tag('a', array('class' => 'nav-link','title'=>"New Application Form",'href'=>$form));
-            $tab1 .= get_string('application', 'local_delegate');
-        $tab1 .= html_writer::end_tag('a');
+    $tab .= html_writer::start_tag('li', array('class' => 'nav-item'));
+        $tab .= html_writer::start_tag('a', array('class' => 'nav-link','title'=>"New Application Form",'href'=>$form));
+            $tab .= get_string('application', 'local_delegate');
+        $tab .= html_writer::end_tag('a');
 
-    $tab1 .= html_writer::end_tag('li');
-$tab1 .= html_writer::end_tag('ul');
+    $tab .= html_writer::end_tag('li');
+$tab .= html_writer::end_tag('ul');
 
    
 
 
 
 echo $OUTPUT->header();
-echo $tab1;
+echo $tab;
 echo html_writer::table($table);
 echo $OUTPUT->footer();
 

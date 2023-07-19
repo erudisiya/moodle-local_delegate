@@ -31,6 +31,20 @@ $capabilities = array(
             'manager' => CAP_ALLOW,
         ),
     ),
-
+    'local/delegate:emailnotifysubmission' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => array(
+            'manager' => CAP_ALLOW,
+            'teacher' => CAP_ALLOW
+        ),
+    ),
+    'local/delegate:emailconfirmsubmission' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => array(
+            'manager' => CAP_ALLOW
+        ),
+    )
 );
 

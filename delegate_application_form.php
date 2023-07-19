@@ -25,51 +25,62 @@ defined('MOODLE_INTERNAL') || die;
 
 class delegate_application_form extends moodleform {
     public function definition() {
+        global $USER, $CFG;
+        require_once($CFG->dirroot . '/local/delegate/lib.php');
+        $delegatee = array();    
+        //print_r($USER);die;
         $mform = $this->_form;
         $coursenames = array();
+        //print_r($this->_customdata); die;
+        
+        
         if (isset($this->_customdata) && !empty($this->_customdata)){
-            $id = $this->_customdata['id'];
-        
-            $mform->addElement('hidden', 'id', $id);
-            $mform->setType('id', PARAM_INT);
-            $coursedetails = get_course($id);
-            $mform->addElement('static', 'courses1', get_string('courses', 'local_delegate'), $coursedetails->fullname);
-            $delegetees = get_users_by_capability(context_course::instance($coursedetails->id), 'moodle/course:manageactivities', 'u.id, u.firstname, u.lastname');
-            print_r($delegetees); die;
-        } else {
-            $allcourses = get_courses();
-            $options = array(                                         
-            'multiple' => true,                                                  
-            'noselectionstring' => get_string('select_and_search', 'local_delegate')
-            );  
-            foreach ($allcourses as $courseid => $allcourse) {
-                if($courseid>1){
-                    $coursenames[$allcourse->id] = $allcourse->fullname;
-                }                                                        
-            }  
-            $mform->addElement('autocomplete', 'courses', get_string('courses', 'local_delegate'), $coursenames, $options);
-            $mform->addRule('courses', get_string('required'), 'required');
-        }
-        //Delegatee search and select
-        $alladmins = get_admins();
-        //echo '<pre>',print_r($alladmins),'</pre>';die;
-        
-        $delegatee = array();
-        //$delegatee[0] = 'none';                                                                                                       
-        foreach ($alladmins as $userid => $admin) {
-            //echo '<pre>',print_r($admin),'</pre>';die;
-            //$fullname = $admin->firstname . ' ' . $admin->lastname;                                                                          
-            $delegatee[$admin->id] = fullname($admin);
+            if (isset($this->_customdata['id'])) {
+                $id = $this->_customdata['id'];//delegate id
+            
+                $mform->addElement('hidden', 'id', $id);
+                $mform->setType('id', PARAM_INT);
+            }
+            if (isset($this->_customdata['courseid'])) {
+                $courseid = $this->_customdata['courseid'];//courseid
+                $mform->addElement('hidden', 'courseid', $courseid);
+                $mform->setType('courseid', PARAM_INT);
+            }
+            
+            
+            $coursedetails = get_course($courseid);
+            $mform->addElement('static', 'textcourses', get_string('courses', 'local_delegate'), $coursedetails->fullname);
+            $delegetees = get_users_by_capability(context_course::instance($coursedetails->id), 'moodle/course:manageactivities', 'u.*');
+                                                                                                            
+            foreach ($delegetees as $userid => $delegete) {
+                //echo '<pre>',print_r($admin),'</pre>';die;
+                //$fullname = $admin->firstname . ' ' . $admin->lastname;
+                if($delegete->id !== $USER->id){
 
-            //$delegatee[$admin->id] = $fullname;                                                                
-        }                                                                                                                           
+                    $delegatee[$delegete->id] = fullname($delegete);
+
+                }                                             
+            }
+            //print_r($delegetees); die;
+        } 
+                                           
         $options = array(                                                                                                           
             'multiple' => false,                                                  
             'noselectionstring' => get_string('select_and_search', 'local_delegate')                                                               
         );         
-        $mform->addElement('autocomplete', 'delegatee', get_string('delegatee', 'local_delegate'), $delegatee, $options);
-        $mform->addRule('delegatee', get_string('required'), 'required');
-
+        
+        if ($id){
+            $delegate = get_delegate($id);
+            $delegateedetails = core_user::get_user($delegate->delegatee);
+            $mform->addElement('static', 'textdelegatee', get_string('delegatee', 'local_delegate'), fullname($delegateedetails));
+            $mform->addElement('hidden', 'delegatee', $id);
+            $mform->setType('delegatee', PARAM_INT);
+            
+            
+        } else {
+            $mform->addElement('autocomplete', 'delegatee', get_string('delegatee', 'local_delegate'), $delegatee, $options);
+            $mform->addRule('delegatee', get_string('required'), 'required');
+        }
         
         $mform->addElement('date_selector', 'startdate', get_string('startdate', 'local_delegate'));
         $mform->setType('startdate', PARAM_INT);

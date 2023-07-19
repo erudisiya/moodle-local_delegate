@@ -35,7 +35,7 @@ function local_delegate_extend_settings_navigation($settingsnav, $context) {
 
     if ($settingnode = $settingsnav->find('courseadmin', navigation_node::TYPE_COURSE)) {
         $strfoo = get_string('pluginname', 'local_delegate');
-        $url = new moodle_url('/local/delegate/edit.php', array('id' => $PAGE->course->id));
+        $url = new moodle_url('/local/delegate/list.php', array('courseid' => $PAGE->course->id));
         $foonode = navigation_node::create(
             $strfoo,
             $url,
@@ -49,4 +49,33 @@ function local_delegate_extend_settings_navigation($settingsnav, $context) {
         }
         $settingnode->add_node($foonode);
     }
+}
+function get_delegate($id) {
+    GLOBAL $DB;
+    $delegate = $DB->get_record('local_delegate', array('id' => $id));
+    return $delegate;
+}
+function send_notification($touser) {
+    $touser = core_user::get_user($touser);
+    $message = new \core\message\message();
+    $message->component = 'local_delegate'; // Your plugin's name
+    $message->name = 'submission'; // Your notification name from message.php
+    $message->userfrom = core_user::get_noreply_user(); // If the message is 'from' a specific user you can set them here
+    $message->userto = $touser;
+    $message->subject = 'message subject 1';
+    $message->fullmessage = 'message body';
+    $message->fullmessageformat = FORMAT_MARKDOWN;
+    $message->fullmessagehtml = '<p>message body</p>';
+    $message->smallmessage = 'small message';
+    $message->notification = 1; // Because this is a notification generated from Moodle, not a user-to-user message
+    $message->contexturl = (new \moodle_url('/course/'))->out(false); // A relevant URL for the notification
+    $message->contexturlname = 'Course list'; // Link title explaining where users get to for the contexturl
+    $content = array('*' => array('header' => ' test ', 'footer' => ' test ')); // Extra content for specific processor
+    $message->set_additional_content('email', $content);
+
+    
+
+    // Actually send the message
+    $messageid = message_send($message);
+    return;
 }

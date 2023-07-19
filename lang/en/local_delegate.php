@@ -62,5 +62,7 @@ $string['delegate:view'] = 'View Delegation';
 $string['delegate:approve'] = 'Approve Delegation';
 
 $string['applystr'] = 'Create Application For Delegate';
+$string['messageprovider:confirmation'] = 'Confirmation of your delegate submissions';
+$string['messageprovider:submission'] = 'Notification of delegate request';
 
 
