@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/delegate/db" VERSION="20230612" COMMENT="XMLDB file for Moodle local/delegate"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="local_delegate" COMMENT="Default comment for local_delegate, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="delegator" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="delegatee" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="courses" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="user_role_id" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="start_date" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="end_date" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="status" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="created_by" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="apply_date_time" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="modifyed_by" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="modify_datetime" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="reason" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="approved_by" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="approved_date" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="action" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+  </TABLES>
+</XMLDB>
