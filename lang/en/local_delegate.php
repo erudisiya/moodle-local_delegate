@@ -63,6 +63,11 @@ $string['delegate:approve'] = 'Approve Delegation';
 
 $string['applystr'] = 'Create Application For Delegate';
 $string['messageprovider:confirmation'] = 'Confirmation of your delegate submissions';
-$string['messageprovider:submission'] = 'Notification of delegate request';
+$string['messageprovider:submission'] = 'Notification of delegate request Approval or Decline';
+
+$string['delegatedetails'] = 'Delegate Details';
+$string['approve'] = 'Approve';
+$string['decline'] = 'Decline';
+$string['delegatedetails'] = 'Delegate Details';
 
 

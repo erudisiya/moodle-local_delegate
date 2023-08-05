@@ -38,7 +38,7 @@ $PAGE->navbar->add($coursedetails->shortname, new moodle_url('/course/view.php',
 $PAGE->navbar->add(get_string("list"), new moodle_url('/local/delegate/list.php?courseid='.$courseid));
 $PAGE->navbar->add(get_string("edit"));
 if ($id){
-    $course = get_course($id);
+    $course = get_course($courseid);
     $PAGE->set_context(context_course::instance($course->id));
     $PAGE->navbar->add($course->shortname, new moodle_url('/course/view.php?id='.$id));
     $PAGE->navbar->add(get_string("allaap", "local_delegate"), new moodle_url('/local/delegate/list.php?id='.$id));
@@ -89,12 +89,7 @@ if ($mform->is_cancelled()) {
     $delegateobj =  new stdClass();
     $delegateobj->delegator = $USER->id;
     $delegateobj->delegatee = $fromform->delegatee;
-    if(is_array($fromform->courseid)){
-        $delegateobj->courses = implode(",", $fromform->courseid);
-    } else {
-        $delegateobj->courses = $fromform->courseid;
-    }
-    
+    $delegateobj->courses = $fromform->courseid;
     $delegateobj->user_role_id = 0;
     $delegateobj->start_date = $fromform->startdate;
     $delegateobj->end_date = $fromform->enddate;
@@ -102,8 +97,8 @@ if ($mform->is_cancelled()) {
     $delegateobj->reason = $fromform->reason;
     $delegateobj->status = 0; //0 = Active, 1 = Delete
     $delegateobj->apply_date_time = $now;
-    $delegateobj->approved_date = "-";
-    $delegateobj->approved_by = "-";
+    $delegateobj->approved_date = 0;
+    $delegateobj->approved_by = 0;
     $delegateobj->modifyed_by = $USER->id;
     $delegateobj->modify_datetime = $now;
     $delegateobj->action = 0;//0 = pending, 1 = approved, 2 = decline

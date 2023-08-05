@@ -24,18 +24,16 @@
 require_once(__DIR__ . '/../../config.php');
 
 GLOBAL $DB, $CFG;
-
+$id = optional_param('id', 0, PARAM_INT);//delegate id
 $courseid = optional_param('courseid', 0, PARAM_INT);//course id
+
 $PAGE->set_pagelayout('report');
 $PAGE->set_url($CFG->wwwroot."/local/delegate/list.php");
 $coursedetails = get_course($courseid);
 $PAGE->navbar->add(get_string("myhome"), new moodle_url('/my'));
 $PAGE->navbar->add($coursedetails->shortname, new moodle_url('/course/view.php?id='.$courseid));
 $PAGE->navbar->add(get_string("list"));
-$id = optional_param('id', 0, PARAM_INT);//delegate id
-$courseid = optional_param('courseid', 0, PARAM_INT);//course id
-$course = get_course($courseid);
-$PAGE->set_context(context_course::instance($course->id));
+$PAGE->set_context(context_course::instance($coursedetails->id));
 if ($id) {
     $form = $CFG->wwwroot . "/local/delegate/edit.php?id=?".$id."&courseid=".$courseid;
 } else {
@@ -75,14 +73,14 @@ if ($action == 'delete') {
     die;
 }
 
-$delrecords = $DB->get_records('local_delegate',['status' => '0']);
+$delegaterecords = $DB->get_records('local_delegate',['status' => '0']);
 /*$rs = $DB->get_recordset(....);
 foreach ($rs as $record) {
     // Do whatever you want with this record
 }
 $rs->close();*/
 /*echo "<pre>";
-print_r($delrecords);die;*/
+print_r($delegaterecords);die;*/
 $table = new html_table();
 $table->id = 'list';/*echo '<pre>';*/
 
@@ -100,62 +98,45 @@ $table->head = array(
 
 $table->align = array('center','center','center','center','center','center','center','center');
 
-foreach ($delrecords as $key => $delrecord) {
-    $delete = new moodle_url('/local/delegate/list.php', array('id' => $delrecord->id, 'courseid' => $courseid, 'action' => 'delete'));
-    $edit = new moodle_url('/local/delegate/edit.php', array('id' => $delrecord->id, 'courseid' => $courseid, 'action' => 'update'));
-    $approve = new moodle_url('/local/delegate/approve.php', array('id' => $delrecord->id, 'courseid' => $courseid, 'action' => 'approve'));
-    $decline = new moodle_url('/local/delegate/decline.php', array('id' => $delrecord->id, 'courseid' => $courseid, 'action' => 'decline'));
+foreach ($delegaterecords as $key => $delegaterecord) {
+    $delete = new moodle_url('/local/delegate/list.php', array('id' => $delegaterecord->id, 'courseid' => $courseid, 'action' => 'delete'));
+
+    $edit = new moodle_url('/local/delegate/edit.php', array('id' => $delegaterecord->id, 'courseid' => $courseid, 'action' => 'update'));
+
+    $approve = new moodle_url('/local/delegate/approve.php', array('id' => $delegaterecord->id, 'courseid' => $courseid, 'action' => 'approve'));
+    
+    $decline = new moodle_url('/local/delegate/decline.php', array('id' => $delegaterecord->id, 'courseid' => $courseid, 'action' => 'decline'));
     
 
-    $courseids = explode(",", $delrecord->courses);
-    //print_r($delrecord);die;
-    $courselength = count($courseids);
-    $coursecounter = 0;
-    $coursename = "";
-    //echo "<pre>";
-    foreach ($courseids as $key => $courseid) {
-        //print_r($courseid)
-        $coursedetail = $DB->get_record('course',['id'=>$courseid]);
-        $courselink = $CFG->wwwroot."/course/view.php?id=".$courseid;
-        //print_r($courselink);die;
-        $coursecounter++;
-            if($coursecounter<$courselength){
-                $coursename .= html_writer::start_tag('a', array('href' => $courselink));
-                    $coursename .= $coursedetail->fullname;   
-                $coursename .= html_writer::end_tag('a').", "; 
-                 
-            }else{
-                $coursename .= html_writer::start_tag('a', array('href' => $courselink));
-                    $coursename .= $coursedetail->fullname;   
-                $coursename .= html_writer::end_tag('a');
-                
-            }
-    }
-    //echo $coursename;
+    $course = get_course($delegaterecord->courses);
+    $courselink = $CFG->wwwroot."/course/view.php?id=".$course->id;
+
+    $coursename = html_writer::start_tag('a', array('href' => $courselink));
+    $coursename .= $course->fullname;
+    $coursename .= html_writer::end_tag('a');
     //die;
-    $delegateename = $DB->get_record('user',['id'=>$delrecord->delegatee]);
     
-    if($delrecord->action == 0){
+    if($delegaterecord->action == 0){
         $actionstr ='Pending';
-    } elseif($delrecord->action == 1){
+    } elseif($delegaterecord->action == 1){
        $actionstr ='Approved';
-    } elseif($delrecord->action == 2){
+    } elseif($delegaterecord->action == 2){
        $actionstr ='Declined';
     };
-    
-    $delname = fullname($delegateename);
-    $namelink = $CFG->wwwroot."/user/profile.php?id=".$delrecord->delegatee;
+    $delegateename = core_user::get_user($delegaterecord->delegatee);
+    $userprofileurl = $CFG->wwwroot."/user/profile.php?id=".$delegaterecord->delegatee;
     //print_r($delegateename);die;
 
-    $dgeteename = html_writer::start_tag('a', array('href' => $namelink));
-        $dgeteename .= $delname;   
-    $dgeteename .= html_writer::end_tag('a');
+    $delegateenamestr = html_writer::start_tag('a', array('href' => $userprofileurl));
+    $delegateenamestr .= fullname($delegateename);   
+    $delegateenamestr .= html_writer::end_tag('a');
 
     if (is_siteadmin()){
-        $action = html_writer::start_tag('a', array('href' => $decline));
+    $action = html_writer::start_tag('a', array('href' => $decline));
         $action .= html_writer::start_tag('i', array('class' => 'fa fa-window-close','aria-hidden'=>'true'));
         $action .= html_writer::end_tag('i');   
     $action .= html_writer::end_tag('a').'&nbsp';
+
     $action .= html_writer::start_tag('a', array('href' => $approve ));
         $action .= html_writer::start_tag('i', array('class' => 'fa fa-check-square','aria-hidden'=>'true'));
         $action .= html_writer::end_tag('i');   
@@ -176,13 +157,13 @@ foreach ($delrecords as $key => $delrecord) {
 
     $table->data[] = array(
         $coursename,
-        //$delrecord->courses,
-        $dgeteename,
-        date('d-M-Y', $delrecord->start_date),
-        date('d-M-Y', $delrecord->end_date),
-        date('d-M-Y h:i A', $delrecord->apply_date_time),
-        $delrecord->approved_by,
-        $delrecord->approved_date,
+        //$delegaterecord->courses,
+        $delegateenamestr,
+        date('d-M-Y', $delegaterecord->start_date),
+        date('d-M-Y', $delegaterecord->end_date),
+        date('d-M-Y h:i A', $delegaterecord->apply_date_time),
+        $delegaterecord->approved_by,
+        $delegaterecord->approved_date,
         $actionstr,//0 = pending, 1 = approved, 2 = decline
         $action
     );  

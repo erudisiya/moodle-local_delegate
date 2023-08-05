@@ -4,7 +4,7 @@
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// (at your option) any later version. 
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -25,29 +25,26 @@ require_once(__DIR__ . '/../../config.php');
 GLOBAL $DB, $CFG;
 require_login();
 
-$action = optional_param('action', null, PARAM_TEXT);
+$action = required_param('action', PARAM_TEXT);
 //print_r($action);
-$id = optional_param('id', PARAM_TEXT);
+$id = required_param('id', PARAM_INT);
+$courseid = required_param('courseid', PARAM_INT);//course id
 
-$getactrec = get_record('local_delegate', ['id' => $id])
-$updateactrec = update_record('local_delegate', data, num)
-    
+$getactrec = $DB->get_record('local_delegate', ['id' => $id]);
+/*echo ("<pre>");
+print_r($getactrec);die;*/
+
+    $now=time();
     $delegateobj =  new stdClass();
-    $delegateobj->delegator = $USER->id;
-    $delegateobj->delegatee = $fromform->delegatee;
-    $delegateobj->courses = implode(",", $fromform->courses);
-    $delegateobj->user_role_id = 0;
-    $delegateobj->start_date = $fromform->startdate;
-    $delegateobj->end_date = $fromform->enddate;
-    $delegateobj->created_by = $USER->id;
-    $delegateobj->reason = $fromform->reason;
-    $delegateobj->status = 0; //0 = Active, 1 = Delete
-    $delegateobj->apply_date_time = $now;
-    $delegateobj->approved_date = "-";
-    $delegateobj->approved_by = "-";
-    $delegateobj->action = 0;//0 = pending, 1 = approved, 2 = decline
+    $delegateobj->id = $getactrec->id;
+    $delegateobj->approved_date = $now;
+    $delegateobj->approved_by = $USER->id;
+    $delegateobj->action = 1;//0 = pending, 1 = approved, 2 = declined
 
+$updateactrec = $DB->update_record('local_delegate', $delegateobj, true);
 
+$link = $CFG->wwwroot."/local/delegate/list.php?courseid=".$courseid;
+redirect($link);
 
 
 

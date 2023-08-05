@@ -35,24 +35,6 @@ $getdelegate = $DB->get_record('local_delegate', ['id' => $id]);
 //print_r($getdelegate);die;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 $delegateobj =  new stdClass();
 $delegateobj->id = $getdelegate->id;
 $delegateobj->delegator = $getdelegate->delegator;
