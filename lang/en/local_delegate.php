@@ -68,6 +68,15 @@ $string['messageprovider:submission'] = 'Notification of delegate request Approv
 $string['delegatedetails'] = 'Delegate Details';
 $string['approve'] = 'Approve';
 $string['decline'] = 'Decline';
+
+$string['pending'] = 'Pending';
+$string['approved'] = 'Approved';
+$string['declined'] = 'Declined';
+
 $string['delegatedetails'] = 'Delegate Details';
+
+$string['approvestr'] = 'Confirm! Do You Want To Approve This Request?';
+$string['declinestr'] = 'Confirm ! Do You Want To Decline This Request?';
+$string['delegatereq'] = 'Details of Delegate Request';
 
 

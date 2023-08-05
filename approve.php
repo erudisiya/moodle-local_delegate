@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Delegate Application
+ * Delegate Application Approve
  *
  * @package   local_delegate
  * @copyright 2023 Erudisiya PVT. LTD.
@@ -28,18 +28,16 @@ require_login();
 $action = required_param('action', PARAM_TEXT);
 //print_r($action);
 $id = required_param('id', PARAM_INT);
-$courseid = required_param('courseid', PARAM_INT);//course id
 
-$getactrec = $DB->get_record('local_delegate', ['id' => $id]);
-/*echo ("<pre>");
-print_r($getactrec);die;*/
+$delegate = $DB->get_record('local_delegate', ['id' => $id]);
+$courseid = $delegate->courses;//course id
 
-    $now=time();
-    $delegateobj =  new stdClass();
-    $delegateobj->id = $getactrec->id;
-    $delegateobj->approved_date = $now;
-    $delegateobj->approved_by = $USER->id;
-    $delegateobj->action = 1;//0 = pending, 1 = approved, 2 = declined
+$now=time();
+$delegateobj = new stdClass();
+$delegateobj->id = $delegate->id;
+$delegateobj->approved_date = $now;
+$delegateobj->approved_by = $USER->id;
+$delegateobj->action = 1;//0 = pending, 1 = approved, 2 = declined
 
 $updateactrec = $DB->update_record('local_delegate', $delegateobj, true);
 

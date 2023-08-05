@@ -61,8 +61,8 @@ class delegate_form extends moodleform {
             $mform->addElement('static', 'startdate', get_string('startdate', 'local_delegate'), date('d-M-Y', $delegate->start_date)); 
             $mform->addElement('static', 'enddate', get_string('enddate', 'local_delegate'), date('d-M-Y', $delegate->end_date)); 
             $mform->addElement('static', 'applydatetime', get_string('apply_date_time', 'local_delegate'), date('d-M-Y h:i A', $delegate->apply_date_time));
-            $approve = new moodle_url('/local/delegate/details.php', array('id' => $delegate->id, 'courseid' => $course->id, 'action' => 'approve'));
-            $decline = new moodle_url('/local/delegate/details.php', array('id' => $delegate->id, 'courseid' => $course->id, 'action' => 'decline'));
+            $approve = new moodle_url('/local/delegate/details.php', array('id' => $delegate->id, 'action' => 'approve'));
+            $decline = new moodle_url('/local/delegate/details.php', array('id' => $delegate->id, 'action' => 'decline'));
             $action = html_writer::start_tag('div', array('class' => 'actionholder'));
             $action .= html_writer::start_tag('a', array('href' => $decline, 'class' => 'btn-decline btn-action'));
             $action .= html_writer::start_tag('i', array('class' => 'fa fa-window-close','aria-hidden'=>'true'));

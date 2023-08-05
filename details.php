@@ -29,38 +29,31 @@ require_once($CFG->dirroot . '/local/delegate/details_form.php');
 
 $PAGE->set_pagelayout('report');
 $PAGE->set_url($CFG->wwwroot."/local/delegate/details.php");
-//$PAGE->set_title("Details of Delegate Request");
-//$PAGE->set_heading("Details of Delegate Request");
+$PAGE->set_title(get_string('delegatereq', 'local_delegate'));
+$PAGE->set_heading(get_string('delegatereq', 'local_delegate'));
 require_login();
 $id = required_param('id', PARAM_INT);
 $action = optional_param('action', null, PARAM_TEXT);
 if ($id){
-    if($action == 'approve') {
+    if ($action == 'approve') {
         echo $OUTPUT->header();
-        $action_id = optional_param('id', 0, PARAM_INT);
-        $yesurl = new moodle_url('/local/delegate/approve.php?id=' . $action_id);
-        $nourl = new moodle_url('/local/delegate/list.php');
-        echo $OUTPUT->confirm('Confirm ! Do You Want To Approve This Request?', $yesurl, $nourl);
+        $yesurl = new moodle_url('/local/delegate/approve.php', array('id' => $id, 'action' => 'approve'));
+        $delegate = $DB->get_record('local_delegate', ['id' => $id]);
+        $nourl = new moodle_url('/local/delegate/list.php', array('id' => $delegate->courses));
+        echo $OUTPUT->confirm(get_string('approvestr', 'local_delegate'), $yesurl, $nourl);
         echo $OUTPUT->footer();
         die;
-    }elseif($action == 'decline') {
+    } elseif ($action == 'decline') {
         echo $OUTPUT->header();
-        $action_id = optional_param('id', 0, PARAM_INT);
-        $yesurl = new moodle_url('/local/delegate/decline.php?id=' . $action_id);
-        $nourl = new moodle_url('/local/delegate/list.php');
-        echo $OUTPUT->confirm('Confirm ! Do You Want To Decline This Request?', $yesurl, $nourl);
+        $yesurl = new moodle_url('/local/delegate/decline.php', array('id' => $id, 'action' => 'decline'));
+        $nourl = new moodle_url('/local/delegate/list.php', array('id' => $delegate->courses));
+        echo $OUTPUT->confirm(get_string('declinestr', 'local_delegate'), $yesurl, $nourl);
         echo $OUTPUT->footer();
         die;
     }
     $customdata = array('id' => $id);
     $mform = new delegate_form(null, $customdata);
 } 
-
-/*echo ("<pre>");
-print_r($getactrec);die;*/
-
-    
-
 
 echo $OUTPUT->header();
 $mform->display();

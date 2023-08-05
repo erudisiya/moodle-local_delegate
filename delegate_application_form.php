@@ -31,9 +31,6 @@ class delegate_application_form extends moodleform {
         //print_r($USER);die;
         $mform = $this->_form;
         $coursenames = array();
-        //print_r($this->_customdata); die;
-        
-        
         if (isset($this->_customdata) && !empty($this->_customdata)){
             if (isset($this->_customdata['id'])) {
                 $id = $this->_customdata['id'];//delegate id
@@ -61,14 +58,12 @@ class delegate_application_form extends moodleform {
 
                 }                                             
             }
-            //print_r($delegetees); die;
         } 
                                            
-        $options = array(                                                                                                           
+        $options = array(                                            
             'multiple' => false,                                                  
             'noselectionstring' => get_string('select_and_search', 'local_delegate')                                                               
         );         
-        
         if ($id){
             $delegate = get_delegate($id);
             $delegateedetails = core_user::get_user($delegate->delegatee);
