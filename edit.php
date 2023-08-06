@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Delegate Application
+ * Delegate Application Handling
  *
  * @package   local_delegate
- * @copyright 2023 Erudisiya PVT. LTD.
+ * @copyright 2023 Sandipa Mukherjee {contact.erudisiya@gmail.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once(__DIR__ . '/../../config.php');
@@ -103,18 +103,16 @@ if ($mform->is_cancelled()) {
     $delegateobj->modify_datetime = $now;
     $delegateobj->action = 0;//0 = pending, 1 = approved, 2 = decline
 
-    //print_r($delegateobj);die;
-    //$delegateobj->skillid = $fromform->skillid;
-
     if (!empty($fromform->id)) {
-        $existingdelegate = $DB->get_record('local_delegate', array("id" => $fromform->id));
         $delegateobj->id = $fromform->id;
-        $record = $DB->update_record('local_delegate', $delegateobj, true);
-        send_notification($delegateobj->delegatee);
+        $DB->update_record('local_delegate', $delegateobj, true);
+
+        send_notification($delegateobj);
     } else {
         
-        $record = $DB->insert_record('local_delegate', $delegateobj, true);
-        send_notification($delegateobj->delegatee);
+        $newdelegate = $DB->insert_record('local_delegate', $delegateobj, true);
+        $delegate = get_delegate($newdelegate);
+        send_notification($delegate);
     }
     
     redirect($CFG->wwwroot."/local/delegate/list.php?courseid=".$courseid);

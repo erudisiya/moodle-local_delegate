@@ -15,17 +15,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Delegate Application
+ * Delegate Application List
  *
  * @package   local_delegate
- * @copyright 2023 Erudisiya PVT. LTD.
+ * @copyright 2023 Sandipa Mukherjee {contact.erudisiya@gmail.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once(__DIR__ . '/../../config.php');
 
 GLOBAL $DB, $CFG;
 $id = optional_param('id', 0, PARAM_INT);//delegate id
-$courseid = optional_param('courseid', 0, PARAM_INT);//courseid
+$courseid = required_param('courseid', PARAM_INT);//courseid
 $action = optional_param('action', null, PARAM_TEXT);
 $PAGE->set_pagelayout('report');
 $PAGE->set_url($CFG->wwwroot."/local/delegate/list.php");
@@ -55,18 +55,17 @@ if ($action == 'approve') {
     die;
 }
 
-$PAGE->set_title("Request for Delegate");
-$PAGE->set_heading("Request for Delegate");
+$PAGE->set_title(get_string('delegatereqlist', 'local_delegate'));
+$PAGE->set_heading(get_string('delegatereqlist', 'local_delegate'));
 require_login();
 
 $action = optional_param('action', null, PARAM_TEXT);
-//print_r($action);
 if ($action == 'delete') {
     echo $OUTPUT->header();
     $action_id = optional_param('id', 0, PARAM_INT);
     $yesurl = new moodle_url('/local/delegate/delete.php?id=' . $action_id);
     $nourl = new moodle_url('/local/delegate/list.php');
-    echo $OUTPUT->confirm('Confirm ! Do You Want To Delete This Request?', $yesurl, $nourl);
+    echo $OUTPUT->confirm(get_string('deletestr', 'local_delegate'), $yesurl, $nourl);
     echo $OUTPUT->footer();
     die;
 }elseif($action == 'approve') {
@@ -82,12 +81,11 @@ if ($action == 'delete') {
     $action_id = optional_param('id', 0, PARAM_INT);
     $yesurl = new moodle_url('/local/delegate/decline.php?id=' . $action_id);
     $nourl = new moodle_url('/local/delegate/list.php');
-    echo $OUTPUT->confirm(get_string('approvestr', 'local_delegate'), $yesurl, $nourl);
+    echo $OUTPUT->confirm(get_string('declinestr', 'local_delegate'), $yesurl, $nourl);
     echo $OUTPUT->footer();
     die;
 }
-
-$delegaterecords = $DB->get_records('local_delegate',['status' => '0']);
+$delegaterecords = $DB->get_recordset('local_delegate', ['status' => 0], 'apply_date_time ASC');
 $table = new html_table();
 $table->id = 'list';
 
@@ -113,7 +111,8 @@ foreach ($delegaterecords as $key => $delegaterecord) {
     $approve = new moodle_url('/local/delegate/list.php', array('id' => $delegaterecord->id, 'action' => 'approve', 'courseid' => $courseid));
     
     $decline = new moodle_url('/local/delegate/list.php', array('id' => $delegaterecord->id, 'action' => 'decline', 'courseid' => $courseid));
-    
+
+    $detail = new moodle_url('/local/delegate/details.php', array('id' => $delegaterecord->id));
 
     $course = get_course($delegaterecord->courses);
     $courselink = $CFG->wwwroot."/course/view.php?id=".$course->id;
@@ -147,14 +146,19 @@ foreach ($delegaterecords as $key => $delegaterecord) {
     
 
     if (is_siteadmin()){
-        $action = html_writer::start_tag('a', array('href' => $decline));
-            $action .= html_writer::start_tag('i', array('class' => 'fa fa-window-close','aria-hidden'=>'true'));
-            $action .= html_writer::end_tag('i');   
+        $action = html_writer::start_tag('a', array('href' => $detail));
+        $action .= html_writer::start_tag('i', array('class' => 'fa fa-external-link-square','aria-hidden'=>'true'));
+        $action .= html_writer::end_tag('i');   
+        $action .= html_writer::end_tag('a').'&nbsp';
+
+        $action .= html_writer::start_tag('a', array('href' => $decline));
+        $action .= html_writer::start_tag('i', array('class' => 'fa fa-window-close','aria-hidden'=>'true'));
+        $action .= html_writer::end_tag('i');   
         $action .= html_writer::end_tag('a').'&nbsp';
 
         $action .= html_writer::start_tag('a', array('href' => $approve ));
-            $action .= html_writer::start_tag('i', array('class' => 'fa fa-check-square','aria-hidden'=>'true'));
-            $action .= html_writer::end_tag('i');   
+        $action .= html_writer::start_tag('i', array('class' => 'fa fa-check-square','aria-hidden'=>'true'));
+        $action .= html_writer::end_tag('i');   
         $action .= html_writer::end_tag('a');
     } else {
         $action = html_writer::start_tag('a', array('href' => $edit));
@@ -186,7 +190,7 @@ foreach ($delegaterecords as $key => $delegaterecord) {
     );  
 }
 
-
+$delegaterecords->close();
 
 
 $tab = html_writer::start_tag('ul', array('class' => 'rui-nav-tabs nav nav-tabs'));

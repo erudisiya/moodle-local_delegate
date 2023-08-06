@@ -17,8 +17,8 @@
 /**
  * delegate nav
  *
- * @package   local_mcis
- * @copyright 2020 Erudisiya PVT LTD {contact.erulearn@gmail.com}{http://erulearn.com/}
+ * @package   local_delegate
+ * @copyright 2023 Sandipa Mukherjee {contact.erudisiya@gmail.com}
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
  */

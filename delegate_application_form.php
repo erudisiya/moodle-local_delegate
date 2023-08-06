@@ -18,7 +18,7 @@
  * Delegate Application
  *
  * @package   local_delegate
- * @copyright 2023 Erudisiya PVT. LTD.
+ * @copyright 2023 Sandipa Mukherjee {contact.erudisiya@gmail.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die;
@@ -28,7 +28,6 @@ class delegate_application_form extends moodleform {
         global $USER, $CFG;
         require_once($CFG->dirroot . '/local/delegate/lib.php');
         $delegatee = array();    
-        //print_r($USER);die;
         $mform = $this->_form;
         $coursenames = array();
         if (isset($this->_customdata) && !empty($this->_customdata)){
@@ -50,8 +49,6 @@ class delegate_application_form extends moodleform {
             $delegetees = get_users_by_capability(context_course::instance($coursedetails->id), 'moodle/course:manageactivities', 'u.*');
                                                                                                             
             foreach ($delegetees as $userid => $delegete) {
-                //echo '<pre>',print_r($admin),'</pre>';die;
-                //$fullname = $admin->firstname . ' ' . $admin->lastname;
                 if($delegete->id !== $USER->id){
 
                     $delegatee[$delegete->id] = fullname($delegete);
@@ -89,7 +86,7 @@ class delegate_application_form extends moodleform {
 
         $mform->addElement('textarea', 'reason', get_string('reason', 'local_delegate'));
         $mform->setType('reason', PARAM_TEXT);
-       
+        $mform->addRule('reason', get_string('required'), 'required');
 
         // Add form buttons
         $this->add_action_buttons(true, get_string('submit'));
@@ -99,16 +96,15 @@ class delegate_application_form extends moodleform {
         $this->definition_after_data();
     }
     function validation($data, $files) {
-        //print_r($data);die;
-            $errors= array();
+        $errors= array();
 
-            if ($data["startdate"] >= $data["enddate"]){
-               $errors['enddate'] = "End Date should be after Start Date "; 
-            } 
-            if ($data["startdate"] >= $data["enddate"]) {
-               $errors['startdate'] = "Start Date should be before End Date ";
-            } 
-            return $errors;
+        if ($data["startdate"] >= $data["enddate"]){
+           $errors['enddate'] = get_string('enddatevalid', 'local_delegate'); 
+        } 
+        if ($data["startdate"] >= $data["enddate"]) {
+           $errors['startdate'] = get_string('startdatevalid', 'local_delegate');
+        } 
+        return $errors;
     }
 
 }

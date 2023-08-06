@@ -18,10 +18,11 @@
  * Delegate Application Decline
  *
  * @package   local_delegate
- * @copyright 2023 Erudisiya PVT. LTD.
+ * @copyright 2023 Sandipa Mukherjee {contact.erudisiya@gmail.com}
  * @license   http://www.gnu.org/copyleft/gpl.html +GNU GPL v3 or later
  */
 require_once(__DIR__ . '/../../config.php');
+require_once($CFG->dirroot . '/local/delegate/lib.php');
 GLOBAL $DB, $CFG;
 require_login();
 
@@ -37,7 +38,8 @@ $declineobj->approved_date = $now;
 $declineobj->approved_by = $USER->id;
 $declineobj->action = 2;//0 = pending, 1 = approved, 2 = declined
 
-$updateactrec = $DB->update_record('local_delegate', $declineobj, true);
-
+$DB->update_record('local_delegate', $declineobj, true);
+$delegate = get_delegate($delegateobj->id);
+decline_notification($delegate);
 $link = $CFG->wwwroot."/local/delegate/list.php?courseid=".$courseid;
 redirect($link);

@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Manager for media files
+ * Language
  *
  * @package   local_delegate
- * @copyright 2023 Erudisiya PVT. LTD.
+ * @copyright 2023 Sandipa Mukherjee {contact.erudisiya@gmail.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -41,9 +41,6 @@ $string['required'] = 'This field is required';
 // Form submission
 $string['submit'] = 'Submit';
 $string['delegate_application_submitted'] = 'delegate application submitted successfully';
-
-// Error messages
-$string['error_occurred'] = 'An error occurred. Please try again later.';
 //Delegate Request
 $string['courses'] = 'Courses';
 $string['delegatee'] = 'Delegatee';
@@ -77,6 +74,36 @@ $string['delegatedetails'] = 'Delegate Details';
 
 $string['approvestr'] = 'Confirm! Do You Want To Approve This Request?';
 $string['declinestr'] = 'Confirm ! Do You Want To Decline This Request?';
+$string['deletestr'] = 'Confirm ! Do You Want To Delete This Request?';
 $string['delegatereq'] = 'Details of Delegate Request';
+$string['delegatereqlist'] = 'Delegation Request List';
 
+$string['enddatevalid'] = 'End Date should be after Start Date.';
+$string['startdatevalid'] = 'End Date should be after Start Date.';
 
+$string['submission_notice_subject'] = 'New Delegate Application';
+$string['submission_notice_body'] = 
+'<p>Hi {$a->touser}</p>
+<p>{$a->fromuser} submits a delegate application for course <a href = "{$a->courseurl}" target = "_blank">{$a->course}</a>.</p>
+<p>The Delegatee name is {$a->fromuser}</p>
+<p>To approve or decline please <a href = "{$a->link}" target = "_blank">click here</a>.</p>
+<p>Thanks!</p>
+';
+
+$string['approve_notice_subject'] = 'Approve Delegate Application';
+$string['approve_notice_body'] = 
+'<p>Hi {$a->touser}</p>
+<p>{$a->fromuser} submits a delegate application for course <a href = "{$a->courseurl}" target = "_blank">{$a->course}</a>.</p>
+<p>The Delegatee name is {$a->fromuser}</p>
+<p>To approve or decline please <a href = "{$a->link}" target = "_blank">click here</a>.</p>
+<p>Thanks!</p>
+';
+
+$string['decline_notice_subject'] = 'Decline Delegate Application';
+$string['decline_notice_body'] = 
+'<p>Hi {$a->touser}</p>
+<p>{$a->fromuser} submits a delegate application for course <a href = "{$a->courseurl}" target = "_blank">{$a->course}</a>.</p>
+<p>The Delegatee name is {$a->fromuser}</p>
+<p>To approve or decline please <a href = "{$a->link}" target = "_blank">click here</a>.</p>
+<p>Thanks!</p>
+';
