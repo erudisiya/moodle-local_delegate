@@ -26,28 +26,53 @@ defined('MOODLE_INTERNAL') || die();
 $capabilities = array(
 
     // Capability to access the leave application form.
-    'local/delegate_application:view' => array(
+    'local/delegate:view' => array(
         'captype' => 'read',
-        'contextlevel' => CONTEXT_SYSTEM,
+        'contextlevel' => CONTEXT_COURSE,
         'archetypes' => array(
             'teacher' => CAP_ALLOW,
         ),
     ),
 
     // Capability to create Delegate Applications.
-    'local/delegate_application:create' => array(
+    'local/delegate:create' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_SYSTEM,
+        'contextlevel' => CONTEXT_COURSE,
         'archetypes' => array(
             'teacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW,
         ),
     ),
-
-    // Capability to approve Delegate applications.
-    'local/delegate_application:approve' => array(
+    // Capability to create Delegate Applications.
+    'local/delegate:update' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_SYSTEM,
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => array(
+            'teacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW,
+        ),
+    ),
+    // Capability to create Delegate Applications.
+    'local/delegate:delete' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => array(
+            'teacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW,
+        ),
+    ),
+    // Capability to approve Delegate applications.
+    'local/delegate:approve' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => array(
+            'manager' => CAP_ALLOW,
+        ),
+    ),
+    // Capability to approve Delegate applications.
+    'local/delegate:decline' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
         'archetypes' => array(
             'manager' => CAP_ALLOW,
         ),
@@ -55,7 +80,7 @@ $capabilities = array(
     // Capability to send Delegate applications Notice.
     'local/delegate:emailnotifysubmission' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_SYSTEM,
+        'contextlevel' => CONTEXT_COURSE,
         'archetypes' => array(
             'manager' => CAP_ALLOW,
             'teacher' => CAP_ALLOW
@@ -64,7 +89,7 @@ $capabilities = array(
     // Capability to send Delegate applications actions.
     'local/delegate:emailconfirmsubmission' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_SYSTEM,
+        'contextlevel' => CONTEXT_COURSE,
         'archetypes' => array(
             'manager' => CAP_ALLOW
         ),

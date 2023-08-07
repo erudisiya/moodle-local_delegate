@@ -38,6 +38,12 @@ $PAGE->set_context(context_course::instance($coursedetails->id));
 if ($courseid) {
     $form = $CFG->wwwroot . "/local/delegate/edit.php?courseid=".$courseid;
 }
+
+// Only let users with the appropriate capability see this settings item.
+if (!has_capability('local/delegate:view', context_course::instance($courseid))) {
+    print_error('accessdenied', 'admin');
+    die;
+}
 if ($action == 'approve') {
     echo $OUTPUT->header();
     $yesurl = new moodle_url('/local/delegate/approve.php', array('id' => $id, 'action' => 'approve', 'courseid' => $courseid));
@@ -85,7 +91,11 @@ if ($action == 'delete') {
     echo $OUTPUT->footer();
     die;
 }
-$delegaterecords = $DB->get_recordset('local_delegate', ['status' => 0], 'apply_date_time ASC');
+if (has_capability('local/delegate:approve', context_course::instance($courseid))) {
+    $delegaterecords = $DB->get_recordset('local_delegate', ['status' => 0], 'apply_date_time ASC');
+} else {
+    $delegaterecords = $DB->get_recordset('local_delegate', ['status' => 0, 'delegator' => $USER->id], 'apply_date_time ASC');
+}
 $table = new html_table();
 $table->id = 'list';
 
@@ -102,7 +112,7 @@ $table->head = array(
 );
 
 $table->align = array('center', 'center', 'center', 'center', 'center', 'center', 'center', 'center');
-
+$action = "";
 foreach ($delegaterecords as $key => $delegaterecord) {
     $delete = new moodle_url('/local/delegate/list.php', array('id' => $delegaterecord->id, 'action' => 'delete', 'courseid' => $courseid));
 
@@ -144,30 +154,34 @@ foreach ($delegaterecords as $key => $delegaterecord) {
         $approvernamestr = '-';
     }
     
-
-    if (is_siteadmin()){
-        $action = html_writer::start_tag('a', array('href' => $detail));
+    if (has_capability('local/delegate:view', context_course::instance($courseid))) {
+        $action .= html_writer::start_tag('a', array('href' => $detail));
         $action .= html_writer::start_tag('i', array('class' => 'fa fa-external-link-square','aria-hidden'=>'true'));
         $action .= html_writer::end_tag('i');   
         $action .= html_writer::end_tag('a').'&nbsp';
-
+    }
+    if (has_capability('local/delegate:decline', context_course::instance($courseid))) {
         $action .= html_writer::start_tag('a', array('href' => $decline));
         $action .= html_writer::start_tag('i', array('class' => 'fa fa-window-close','aria-hidden'=>'true'));
         $action .= html_writer::end_tag('i');   
         $action .= html_writer::end_tag('a').'&nbsp';
-
+    }
+    if (has_capability('local/delegate:approve', context_course::instance($courseid))) {
         $action .= html_writer::start_tag('a', array('href' => $approve ));
         $action .= html_writer::start_tag('i', array('class' => 'fa fa-check-square','aria-hidden'=>'true'));
         $action .= html_writer::end_tag('i');   
         $action .= html_writer::end_tag('a');
-    } else {
-        $action = html_writer::start_tag('a', array('href' => $edit));
-            $action .= html_writer::start_tag('i', array('class' => 'fa fa-pencil', 'aria-hidden'=>'true'));
-            $action .= html_writer::end_tag('i');   
+    }
+    if (has_capability('local/delegate:update', context_course::instance($courseid))) {
+        $action .= html_writer::start_tag('a', array('href' => $edit));
+        $action .= html_writer::start_tag('i', array('class' => 'fa fa-pencil', 'aria-hidden'=>'true'));
+        $action .= html_writer::end_tag('i');   
         $action .= html_writer::end_tag('a').'&nbsp';
+    }
+    if (has_capability('local/delegate:delete', context_course::instance($courseid))) {
         $action .= html_writer::start_tag('a', array('href' => $delete));
-            $action .= html_writer::start_tag('i', array('class' => 'fa fa-trash','aria-hidden'=>'true'));
-            $action .= html_writer::end_tag('i');   
+        $action .= html_writer::start_tag('i', array('class' => 'fa fa-trash','aria-hidden'=>'true'));
+        $action .= html_writer::end_tag('i');   
         $action .= html_writer::end_tag('a');
     }
 
@@ -188,6 +202,7 @@ foreach ($delegaterecords as $key => $delegaterecord) {
         $actionstr,//0 = pending, 1 = approved, 2 = decline
         $action
     );  
+    $action = "";
 }
 
 $delegaterecords->close();
@@ -195,18 +210,19 @@ $delegaterecords->close();
 
 $tab = html_writer::start_tag('ul', array('class' => 'rui-nav-tabs nav nav-tabs'));
     $tab .= html_writer::start_tag('li', array('class' => 'nav-item'));
-        $tab .= html_writer::start_tag('a', array('class' => 'nav-link active','title'=>"All Application List"));
-            $tab .= get_string('allaap', 'local_delegate');
-        $tab .= html_writer::end_tag('a');
+    $tab .= html_writer::start_tag('a', array('class' => 'nav-link active','title' => get_string('allaap', 'local_delegate')));
+        $tab .= get_string('allaap', 'local_delegate');
+    $tab .= html_writer::end_tag('a');
 
     $tab .= html_writer::end_tag('li');
-
-    $tab .= html_writer::start_tag('li', array('class' => 'nav-item'));
+    if (has_capability('local/delegate:create', context_course::instance($courseid))) {
+        $tab .= html_writer::start_tag('li', array('class' => 'nav-item'));
         $tab .= html_writer::start_tag('a', array('class' => 'nav-link','title'=>"New Application Form",'href'=>$form));
             $tab .= get_string('application', 'local_delegate');
         $tab .= html_writer::end_tag('a');
 
-    $tab .= html_writer::end_tag('li');
+        $tab .= html_writer::end_tag('li');
+    }
 $tab .= html_writer::end_tag('ul');
 
    

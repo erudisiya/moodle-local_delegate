@@ -54,14 +54,19 @@ $string['staus'] = 'Staus';
 $string['application'] = 'New Application for Delegate';
 $string['allaap'] = 'All Application List';
 
-$string['delegate:create'] = 'Create Delegation';
-$string['delegate:view'] = 'View Delegation';
-$string['delegate:approve'] = 'Approve Delegation';
+$string['delegate:create'] = 'Create Delegate Application';
+$string['delegate:view'] = 'View Delegate Application';
+$string['delegate:approve'] = 'Approve Delegate Application';
 
 $string['applystr'] = 'Create Application For Delegate';
 $string['messageprovider:confirmation'] = 'Confirmation of your delegate submissions';
 $string['messageprovider:submission'] = 'Notification of delegate request Approval or Decline';
-
+$string['delegate:emailnotifysubmission'] = 'Email Notify Submission';
+$string['delegate:emailconfirmsubmission'] = 'Email Confirm Submission';
+$string['delegate:approve'] = 'Approve Delegation Request';
+$string['delegate:update'] = 'Update Delegate Application';
+$string['delegate:delete'] = 'Update Delegate Application';
+$string['delegate:decline'] = 'Decline Delegation Request';
 $string['delegatedetails'] = 'Delegate Details';
 $string['approve'] = 'Approve';
 $string['decline'] = 'Decline';
@@ -84,26 +89,32 @@ $string['startdatevalid'] = 'End Date should be after Start Date.';
 $string['submission_notice_subject'] = 'New Delegate Application';
 $string['submission_notice_body'] = 
 '<p>Hi {$a->touser}</p>
-<p>{$a->fromuser} submits a delegate application for course <a href = "{$a->courseurl}" target = "_blank">{$a->course}</a>.</p>
-<p>The Delegatee name is {$a->fromuser}</p>
+<p>{$a->delegator} submits a delegate application for course <a href = "{$a->courseurl}" target = "_blank">{$a->course}</a>.</p>
+<p>The Delegatee name is {$a->delegatee}</p>
 <p>To approve or decline please <a href = "{$a->link}" target = "_blank">click here</a>.</p>
 <p>Thanks!</p>
 ';
 
-$string['approve_notice_subject'] = 'Approve Delegate Application';
-$string['approve_notice_body'] = 
+$string['approve_notice_subject_delegator'] = 'Approve Delegate Application';
+$string['approve_notice_body_delegator'] = 
 '<p>Hi {$a->touser}</p>
-<p>{$a->fromuser} submits a delegate application for course <a href = "{$a->courseurl}" target = "_blank">{$a->course}</a>.</p>
+<p>{$a->fromuser} approved your delegate application for course <a href = "{$a->courseurl}" target = "_blank">{$a->course}</a> {$a->start_date} to {$a->end_date}.</p>
+<p>The Delegator name is {$a->fromuser}</p>
+<p>Welcome!</p>
+';
+
+$string['approve_notice_subject_delegatee'] = 'Approve Delegate Application';
+$string['approve_notice_body_delegatee'] = 
+'<p>Hi {$a->touser}</p>
+<p>{$a->fromuser} approved you as delegatee for course <a href = "{$a->courseurl}" target = "_blank">{$a->course}</a> {$a->start_date} to {$a->end_date}.</p>
 <p>The Delegatee name is {$a->fromuser}</p>
-<p>To approve or decline please <a href = "{$a->link}" target = "_blank">click here</a>.</p>
-<p>Thanks!</p>
+<p>Thank You!</p>
 ';
 
 $string['decline_notice_subject'] = 'Decline Delegate Application';
 $string['decline_notice_body'] = 
-'<p>Hi {$a->touser}</p>
-<p>{$a->fromuser} submits a delegate application for course <a href = "{$a->courseurl}" target = "_blank">{$a->course}</a>.</p>
-<p>The Delegatee name is {$a->fromuser}</p>
-<p>To approve or decline please <a href = "{$a->link}" target = "_blank">click here</a>.</p>
-<p>Thanks!</p>
+'<p>Hi {$a->delegator}</p>
+<p>{$a->admin} declined your delegate application for course <a href = "{$a->courseurl}" target = "_blank">{$a->course}</a> {$a->start_date} to {$a->end_date}.</p>
+<p>The Delegatee name was {$a->delegatee}</p>
+<p>Sorry!</p>
 ';

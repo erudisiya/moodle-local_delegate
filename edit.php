@@ -130,10 +130,11 @@ if ($mform->is_cancelled()) {
         $mform->set_data($delegaterec); //Set default data (if any)
     }
 
-  //Set default data (if any)
-  //$mform->set_data($toform);
-  //displays the form
   echo $OUTPUT->header();
+  if (!has_capability('local/delegate:create', context_course::instance($courseid))) {
+    print_error('accessdenied', 'admin');
+    die;
+  }
   echo $tab;
   $mform->display();
   echo $OUTPUT->footer();

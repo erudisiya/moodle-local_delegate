@@ -31,7 +31,7 @@ $id = required_param('id', PARAM_INT);
 
 $delegate = $DB->get_record('local_delegate', ['id' => $id]);
 $courseid = $delegate->courses;// Course id.
-
+$PAGE->set_context(context_course::instance($courseid));
 $now = time();
 $delegateobj = new stdClass();
 $delegateobj->id = $delegate->id;

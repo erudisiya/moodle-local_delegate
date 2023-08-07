@@ -31,6 +31,7 @@ $action = required_param('action', PARAM_TEXT);
 $id = required_param('id', PARAM_INT);
 $delegate = $DB->get_record('local_delegate', ['id' => $id]);
 $courseid = $delegate->courses;//course id
+$PAGE->set_context(context_course::instance($courseid));
 $now = time();
 $declineobj =  new stdClass();
 $declineobj->id = $delegate->id;
@@ -39,7 +40,7 @@ $declineobj->approved_by = $USER->id;
 $declineobj->action = 2;//0 = pending, 1 = approved, 2 = declined
 
 $DB->update_record('local_delegate', $declineobj, true);
-$delegate = get_delegate($delegateobj->id);
+$delegate = get_delegate($declineobj->id);
 decline_notification($delegate);
 $link = $CFG->wwwroot."/local/delegate/list.php?courseid=".$courseid;
 redirect($link);

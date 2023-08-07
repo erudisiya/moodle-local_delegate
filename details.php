@@ -24,6 +24,7 @@
 
 require_once(__DIR__ . '/../../config.php');
 GLOBAL $DB, $CFG;
+require_once($CFG->dirroot . '/local/delegate/lib.php');
 $PAGE->requires->css('/local/delegate/style.css');
 require_once($CFG->dirroot . '/local/delegate/details_form.php');
 
@@ -38,13 +39,14 @@ if ($id){
     if ($action == 'approve') {
         echo $OUTPUT->header();
         $yesurl = new moodle_url('/local/delegate/approve.php', array('id' => $id, 'action' => 'approve'));
-        $delegate = $DB->get_record('local_delegate', ['id' => $id]);
+        $delegate = get_delegate($id);
         $nourl = new moodle_url('/local/delegate/list.php', array('id' => $delegate->courses));
         echo $OUTPUT->confirm(get_string('approvestr', 'local_delegate'), $yesurl, $nourl);
         echo $OUTPUT->footer();
         die;
     } elseif ($action == 'decline') {
         echo $OUTPUT->header();
+        $delegate = get_delegate($id);
         $yesurl = new moodle_url('/local/delegate/decline.php', array('id' => $id, 'action' => 'decline'));
         $nourl = new moodle_url('/local/delegate/list.php', array('id' => $delegate->courses));
         echo $OUTPUT->confirm(get_string('declinestr', 'local_delegate'), $yesurl, $nourl);
