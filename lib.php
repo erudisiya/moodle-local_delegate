@@ -24,7 +24,7 @@
 function local_delegate_extend_settings_navigation($settingsnav, $context) {
     global $CFG, $PAGE;
     // Only add this settings item on non-site course pages.
-    if (!$PAGE->course or $PAGE->course->id == 1) {
+    if (!$PAGE->course || $PAGE->course->id == 1) {
         return;
     }
 
@@ -33,7 +33,8 @@ function local_delegate_extend_settings_navigation($settingsnav, $context) {
         return;
     }
 
-    if ($settingnode = $settingsnav->find('courseadmin', navigation_node::TYPE_COURSE)) {
+    if ($settingnode = $settingsnav->find('courseadmin',
+         navigation_node::TYPE_COURSE)) {
         $strfoo = get_string('pluginname', 'local_delegate');
         $url = new moodle_url('/local/delegate/list.php', array('courseid' => $PAGE->course->id));
         $foonode = navigation_node::create(
@@ -63,23 +64,25 @@ function send_notification($delegate) {
     $course = get_course($delegate->courses);
     $delegatedetailsurl = $CFG->wwwroot.'/local/delegate/details.php?id='.$delegate->id;
     $courseurl = $CFG->wwwroot.'/course/view.php?id='.$course->id;
-    $strreplace = ['touser' => fullname($touser), 'delegator' => fullname($formuser), 'delegatee' => fullname($delegateename), 'course' => $course->fullname, 'courseurl' => $courseurl, 'link' => $delegatedetailsurl];
+    $strreplace = ['touser' => fullname($touser),
+     'delegator' => fullname($formuser), 'delegatee' => fullname($delegateename),
+      'course' => $course->fullname, 'courseurl' => $courseurl, 'link' => $delegatedetailsurl];
     $message = new \core\message\message();
-    $message->component = 'local_delegate'; // Your plugin's name
-    $message->name = 'submission'; // Your notification name from message.php
-    $message->userfrom = core_user::get_noreply_user(); // If the message is 'from' a specific user you can set them here
+    $message->component = 'local_delegate'; // Your plugin's name.
+    $message->name = 'submission'; // Your notification name from message.php.
+    $message->userfrom = core_user::get_noreply_user(); // If the message is 'from' a specific user you can set them here.
     $message->userto = $touser;
     $message->subject = get_string('submission_notice_subject', 'local_delegate');
     $message->fullmessage = get_string('submission_notice_body', 'local_delegate', $strreplace);
     $message->fullmessageformat = FORMAT_MARKDOWN;
     $message->fullmessagehtml = get_string('submission_notice_body', 'local_delegate', $strreplace);
     $message->smallmessage = get_string('submission_notice_subject', 'local_delegate');
-    $message->notification = 1; // Because this is a notification generated from Moodle, not a user-to-user message
-    $message->contexturl = (new \moodle_url('/course/'))->out(false); // A relevant URL for the notification
-    $message->contexturlname = 'abcd'; // Link title explaining where users get to for the contexturl
-    $content = array('*' => array('header' => '  ', 'footer' => '  ')); // Extra content for specific processor
+    $message->notification = 1; // Because this is a notification generated from Moodle, not a user-to-user message.
+    $message->contexturl = (new \moodle_url('/course/'))->out(false); // A relevant URL for the notification.
+    $message->contexturlname = 'abcd'; // Link title explaining where users get to for the contexturl.
+    $content = array('*' => array('header' => '  ', 'footer' => '  ')); // Extra content for specific processor.
     $message->set_additional_content('email', $content);
-    // Actually send the message
+    // Actually send the message.
     $messageid = message_send($message);
     return;
 }
@@ -88,33 +91,32 @@ function approve_notification($delegate) {
     $touser = core_user::get_user($delegate->delegator);
     $formuser = get_admin();
     $course = get_course($delegate->courses);
+    $delegateename = core_user::get_user($delegate->delegatee);
     $delegatedetailsurl = $CFG->wwwroot.'/local/delegate/details.php?id='.$delegate->id;
     $courseurl = $CFG->wwwroot.'/course/view.php?id='.$course->id;
-    $strreplace = ['touser' => fullname($touser), 'fromuser' => fullname($formuser), 'course' => $course->fullname, 'courseurl' => $courseurl, 'link' => $delegatedetailsurl, 'start_date' => date('d-M-Y', $delegate->start_date), 'end_date' => date('d-M-Y', $delegate->end_date)];
+    $strreplace = ['touser' => fullname($touser),
+     'fromuser' => fullname($formuser), 'course' => $course->fullname, 'courseurl' => $courseurl,
+     'link' => $delegatedetailsurl, 'delegatee' => fullname($delegateename),
+      'start_date' => date('d-M-Y', $delegate->start_date), 'end_date' => date('d-M-Y', $delegate->end_date)];
+
     $message = new \core\message\message();
-    $message->component = 'local_delegate'; // Your plugin's name
-    $message->name = 'confirmation'; // Your notification name from message.php
-    $message->userfrom = core_user::get_noreply_user(); // If the message is 'from' a specific user you can set them here
+    $message->component = 'local_delegate'; // Your plugin's name.
+    $message->name = 'confirmation'; // Your notification name from message.php.
+    $message->userfrom = core_user::get_noreply_user(); // If the message is 'from' a specific user you can set them here.
     $message->userto = $touser;
     $message->subject = get_string('approve_notice_subject_delegator', 'local_delegate');
     $message->fullmessage = get_string('approve_notice_body_delegator', 'local_delegate', $strreplace);
     $message->fullmessageformat = FORMAT_MARKDOWN;
     $message->fullmessagehtml = get_string('approve_notice_body_delegator', 'local_delegate', $strreplace);
     $message->smallmessage = get_string('approve_notice_subject_delegator', 'local_delegate');
-    $message->notification = 1; // Because this is a notification generated from Moodle, not a user-to-user message
-    /*$message->contexturl = (new \moodle_url('/course/'))->out(false); // A relevant URL for the notification
-    $message->contexturlname = 'Course list'; // Link title explaining where users get to for the contexturl*/
-    $content = array('*' => array('header' => '  ', 'footer' => '  ')); // Extra content for specific processor
+    $message->notification = 1; // Because this is a notification generated from Moodle, not a user-to-user message.
+
+    $content = array('*' => array('header' => '  ', 'footer' => '  ')); // Extra content for specific processor.
     $message->set_additional_content('email', $content);
-
-    
-
-    // Actually send the message
+    // Actually send the message.
     $messageid = message_send($message);
     return;
 }
-
-
 
 function decline_notification($delegate) {
     GLOBAL $CFG;
@@ -124,23 +126,56 @@ function decline_notification($delegate) {
     $course = get_course($delegate->courses);
     $delegatedetailsurl = $CFG->wwwroot.'/local/delegate/details.php?id='.$delegate->id;
     $courseurl = $CFG->wwwroot.'/course/view.php?id='.$course->id;
-    $strreplace = ['delegator' => fullname($delegator), 'admin' => fullname($formuser), 'course' => $course->fullname, 'courseurl' => $courseurl, 'link' => $delegatedetailsurl, 'delegatee' => fullname($delegateename), 'start_date' => date('d-M-Y', $delegate->start_date), 'end_date' => date('d-M-Y', $delegate->end_date)];
+    $strreplace = ['delegator' => fullname($delegator), 'admin' => fullname($formuser),
+     'course' => $course->fullname, 'courseurl' => $courseurl, 'link' => $delegatedetailsurl,
+      'delegatee' => fullname($delegateename), 'start_date' => date('d-M-Y', $delegate->start_date),
+       'end_date' => date('d-M-Y', $delegate->end_date)];
     $message = new \core\message\message();
-    $message->component = 'local_delegate'; // Your plugin's name
-    $message->name = 'confirmation'; // Your notification name from message.php
-    $message->userfrom = core_user::get_noreply_user(); // If the message is 'from' a specific user you can set them here
+    $message->component = 'local_delegate'; // Your plugin's name.
+    $message->name = 'confirmation'; // Your notification name from message.php.
+    $message->userfrom = core_user::get_noreply_user(); // If the message is 'from' a specific user you can set them here.
     $message->userto = $delegator;
     $message->subject = get_string('decline_notice_subject', 'local_delegate');
     $message->fullmessage = get_string('decline_notice_body', 'local_delegate', $strreplace);
     $message->fullmessageformat = FORMAT_MARKDOWN;
     $message->fullmessagehtml = get_string('decline_notice_body', 'local_delegate', $strreplace);
     $message->smallmessage = get_string('decline_notice_subject', 'local_delegate');
-    $message->notification = 1; // Because this is a notification generated from Moodle, not a user-to-user message
-    $message->contexturl = (new \moodle_url('/course/'))->out(false); // A relevant URL for the notification
-    $message->contexturlname = 'xyz'; // Link title explaining where users get to for the contexturl
-    $content = array('*' => array('header' => '  ', 'footer' => '  ')); // Extra content for specific processor
+    $message->notification = 1; // Because this is a notification generated from Moodle, not a user-to-user message.
+    $message->contexturl = (new \moodle_url('/course/'))->out(false); // A relevant URL for the notification.
+    $message->contexturlname = 'xyz'; // Link title explaining where users get to for the contexturl.
+    $content = array('*' => array('header' => '  ', 'footer' => '  ')); // Extra content for specific processor.
     $message->set_additional_content('email', $content);
-    // Actually send the message
+    // Actually send the message.
+    $messageid = message_send($message);
+    return;
+}
+function approve_notification_delegatee($delegate) {
+    GLOBAL $CFG;
+    $delegatorfullname = core_user::get_user($delegate->delegator);
+    $touser = core_user::get_user($delegate->delegatee);
+    $formuser = get_admin();
+    $course = get_course($delegate->courses);
+    $delegatedetailsurl = $CFG->wwwroot.'/local/delegate/details.php?id='.$delegate->id;
+    $courseurl = $CFG->wwwroot.'/course/view.php?id='.$course->id;
+    $strreplace = ['touser' => fullname($touser),
+     'fromuser' => fullname($formuser), 'course' => $course->fullname, 'courseurl' => $courseurl,
+     'link' => $delegatedetailsurl, 'delegator' => fullname($delegatorfullname),
+      'start_date' => date('d-M-Y', $delegate->start_date), 'end_date' => date('d-M-Y', $delegate->end_date)];
+    $message = new \core\message\message();
+    $message->component = 'local_delegate'; // Your plugin's name.
+    $message->name = 'confirmationdelegatee'; // Your notification name from message.php.
+    $message->userfrom = core_user::get_noreply_user(); // If the message is 'from' a specific user you can set them here.
+    $message->userto = $touser;
+    $message->subject = get_string('approve_notice_subject_delegatee', 'local_delegate');
+    $message->fullmessage = get_string('approve_notice_body_delegatee', 'local_delegate', $strreplace);
+    $message->fullmessageformat = FORMAT_MARKDOWN;
+    $message->fullmessagehtml = get_string('approve_notice_body_delegatee', 'local_delegate', $strreplace);
+    $message->smallmessage = get_string('approve_notice_body_delegatee', 'local_delegate');
+    $message->notification = 1; // Because this is a notification generated from Moodle, not a user-to-user message.
+
+    $content = array('*' => array('header' => '  ', 'footer' => '  ')); // Extra content for specific processor.
+    $message->set_additional_content('email', $content);
+    // Actually send the message.
     $messageid = message_send($message);
     return;
 }

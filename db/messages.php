@@ -23,20 +23,28 @@
  */
 defined('MOODLE_INTERNAL') || die();
 $messageproviders = array (
-    // Notify delegatee when new request generated
+    // Notify delegatee when new request generated.
     'submission' => array (
         'defaults' => [
             'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_LOGGEDIN + MESSAGE_DEFAULT_LOGGEDOFF,
-            'email' => MESSAGE_PERMITTED 
+            'email' => MESSAGE_PERMITTED
         ],
         'capability'  => 'local/delegate:emailnotifysubmission'
     ),
-    // Approve a delegate Request
+    // Approve a delegate Request.
     'confirmation' => array (
         'defaults' => [
             'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_LOGGEDIN + MESSAGE_DEFAULT_LOGGEDOFF,
-            'email' => MESSAGE_PERMITTED 
+            'email' => MESSAGE_PERMITTED
         ],
         'capability'  => 'local/delegate:emailconfirmsubmission'
+    ),
+    // Approved a delegate request delegatee.
+    'confirmationdelegatee' => array (
+        'defaults' => [
+            'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_LOGGEDIN + MESSAGE_DEFAULT_LOGGEDOFF,
+            'email' => MESSAGE_PERMITTED
+        ],
+        'capability'  => 'local/delegate:delegateeapprovemail'
     )
 );

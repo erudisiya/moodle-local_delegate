@@ -33,7 +33,6 @@ $capabilities = array(
             'teacher' => CAP_ALLOW,
         ),
     ),
-
     // Capability to create Delegate Applications.
     'local/delegate:create' => array(
         'captype' => 'write',
@@ -69,7 +68,7 @@ $capabilities = array(
             'manager' => CAP_ALLOW,
         ),
     ),
-    // Capability to approve Delegate applications.
+    // Capability to decline Delegate applications.
     'local/delegate:decline' => array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
@@ -93,6 +92,14 @@ $capabilities = array(
         'archetypes' => array(
             'manager' => CAP_ALLOW
         ),
+    ),
+    // Capability to send Delegate applications actions.
+    'local/delegate:delegateeapprovemail' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => array(
+            'manager' => CAP_ALLOW,
+            'teacher' => CAP_ALLOW
+        ),
     )
 );
-

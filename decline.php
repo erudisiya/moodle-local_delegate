@@ -4,7 +4,7 @@
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version. 
+// (at your option) any later version.
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,18 +27,16 @@ GLOBAL $DB, $CFG;
 require_login();
 
 $action = required_param('action', PARAM_TEXT);
-//print_r($action);
 $id = required_param('id', PARAM_INT);
 $delegate = $DB->get_record('local_delegate', ['id' => $id]);
-$courseid = $delegate->courses;//course id
+$courseid = $delegate->courses;// Course id.
 $PAGE->set_context(context_course::instance($courseid));
 $now = time();
-$declineobj =  new stdClass();
+$declineobj = new stdClass();
 $declineobj->id = $delegate->id;
 $declineobj->approved_date = $now;
 $declineobj->approved_by = $USER->id;
-$declineobj->action = 2;//0 = pending, 1 = approved, 2 = declined
-
+$declineobj->status = 2;// 0 = pending, 1 = approved, 2 = declined.
 $DB->update_record('local_delegate', $declineobj, true);
 $delegate = get_delegate($declineobj->id);
 decline_notification($delegate);

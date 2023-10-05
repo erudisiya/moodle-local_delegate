@@ -21,92 +21,80 @@
  * @copyright 2023 Sandipa Mukherjee {contact.erudisiya@gmail.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-defined('MOODLE_INTERNAL') || die;
-
 class delegate_application_form extends moodleform {
     public function definition() {
         global $USER, $CFG;
         require_once($CFG->dirroot . '/local/delegate/lib.php');
-        $delegatee = array();    
+        $delegatee = array();
         $mform = $this->_form;
         $coursenames = array();
-        if (isset($this->_customdata) && !empty($this->_customdata)){
+        if (isset($this->_customdata) && !empty($this->_customdata)) {
             if (isset($this->_customdata['id'])) {
-                $id = $this->_customdata['id'];//delegate id
-            
+                $id = $this->_customdata['id'];// Delegate id.
                 $mform->addElement('hidden', 'id', $id);
                 $mform->setType('id', PARAM_INT);
             }
             if (isset($this->_customdata['courseid'])) {
-                $courseid = $this->_customdata['courseid'];//courseid
+                $courseid = $this->_customdata['courseid'];// Course id.
                 $mform->addElement('hidden', 'courseid', $courseid);
                 $mform->setType('courseid', PARAM_INT);
             }
-            
-            
             $coursedetails = get_course($courseid);
             $mform->addElement('static', 'textcourses', get_string('courses', 'local_delegate'), $coursedetails->fullname);
-            $delegetees = get_users_by_capability(context_course::instance($coursedetails->id), 'moodle/course:manageactivities', 'u.*');
-                                                                                                            
+            $delegetees = get_users_by_capability(context_course::instance($coursedetails->id), 'local/delegate:approve', 'u.*');
             foreach ($delegetees as $userid => $delegete) {
-                if($delegete->id !== $USER->id){
-
+                if ($delegete->id !== $USER->id) {
                     $delegatee[$delegete->id] = fullname($delegete);
 
-                }                                             
+                }
             }
-        } 
-                                           
-        $options = array(                                            
-            'multiple' => false,                                                  
-            'noselectionstring' => get_string('select_and_search', 'local_delegate')                                                               
-        );         
-        if ($id){
+        }
+
+        $options = array(
+            'multiple' => false,
+            'noselectionstring' => get_string('select_and_search', 'local_delegate')
+        );
+        if ($id) {
             $delegate = get_delegate($id);
             $delegateedetails = core_user::get_user($delegate->delegatee);
             $mform->addElement('static', 'textdelegatee', get_string('delegatee', 'local_delegate'), fullname($delegateedetails));
             $mform->addElement('hidden', 'delegatee', $id);
             $mform->setType('delegatee', PARAM_INT);
-            
-            
         } else {
             $mform->addElement('autocomplete', 'delegatee', get_string('delegatee', 'local_delegate'), $delegatee, $options);
             $mform->addRule('delegatee', get_string('required'), 'required');
         }
-        
-        $mform->addElement('date_selector', 'startdate', get_string('startdate', 'local_delegate'));
+
+        $mform->addElement('date_selector', 'startdate',
+         get_string('startdate', 'local_delegate'));
         $mform->setType('startdate', PARAM_INT);
         $mform->addRule('startdate', get_string('required'), 'required');
-
 
         $mform->addElement('date_selector', 'enddate', get_string('enddate', 'local_delegate'));
         $mform->setType('enddate', PARAM_INT);
         $mform->addRule('enddate', get_string('required'), 'required');
 
-
         $mform->addElement('textarea', 'reason', get_string('reason', 'local_delegate'));
         $mform->setType('reason', PARAM_TEXT);
         $mform->addRule('reason', get_string('required'), 'required');
 
-        // Add form buttons
+        // Add form buttons.
         $this->add_action_buttons(true, get_string('submit'));
 
-        // Set form validation and definition
+        // Set form validation and definition.
         $this->set_data($this->_customdata);
         $this->definition_after_data();
     }
-    function validation($data, $files) {
-        $errors= array();
+    public function validation($data, $files) {
+        $errors = array();
 
-        if ($data["startdate"] >= $data["enddate"]){
-           $errors['enddate'] = get_string('enddatevalid', 'local_delegate'); 
-        } 
         if ($data["startdate"] >= $data["enddate"]) {
-           $errors['startdate'] = get_string('startdatevalid', 'local_delegate');
-        } 
+            $errors['enddate'] = get_string('enddatevalid', 'local_delegate');
+        }
+        if ($data["startdate"] >= $data["enddate"]) {
+            $errors['startdate'] = get_string('startdatevalid', 'local_delegate');
+        }
         return $errors;
     }
 
 }
-
-

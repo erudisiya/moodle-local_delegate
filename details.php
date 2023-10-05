@@ -4,7 +4,7 @@
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version. 
+// (at your option) any later version.
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -35,7 +35,7 @@ $PAGE->set_heading(get_string('delegatereq', 'local_delegate'));
 require_login();
 $id = required_param('id', PARAM_INT);
 $action = optional_param('action', null, PARAM_TEXT);
-if ($id){
+if ($id) {
     if ($action == 'approve') {
         echo $OUTPUT->header();
         $yesurl = new moodle_url('/local/delegate/approve.php', array('id' => $id, 'action' => 'approve'));
@@ -44,7 +44,7 @@ if ($id){
         echo $OUTPUT->confirm(get_string('approvestr', 'local_delegate'), $yesurl, $nourl);
         echo $OUTPUT->footer();
         die;
-    } elseif ($action == 'decline') {
+    } else if ($action == 'decline') {
         echo $OUTPUT->header();
         $delegate = get_delegate($id);
         $yesurl = new moodle_url('/local/delegate/decline.php', array('id' => $id, 'action' => 'decline'));
@@ -53,11 +53,10 @@ if ($id){
         echo $OUTPUT->footer();
         die;
     }
-    $customdata = array('id' => $id);
-    $mform = new delegate_form(null, $customdata);
-} 
 
+        $customdata = array('id' => $id);
+        $mform = new delegate_form(null, $customdata);
+}
 echo $OUTPUT->header();
 $mform->display();
 echo $OUTPUT->footer();
-

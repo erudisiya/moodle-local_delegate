@@ -27,15 +27,10 @@ GLOBAL $DB, $CFG;
 require_login();
 
 $id = required_param('id', PARAM_INT);
-//print_r($id);die;
-
 
 $getdelegate = $DB->get_record('local_delegate', ['id' => $id]);
-//echo '<pre>';
-//print_r($getdelegate);die;
 
-
-$delegateobj =  new stdClass();
+$delegateobj = new stdClass();
 $delegateobj->id = $getdelegate->id;
 $delegateobj->delegator = $getdelegate->delegator;
 $delegateobj->delegatee = $getdelegate->delegatee;
@@ -45,14 +40,11 @@ $delegateobj->start_date = $getdelegate->start_date;
 $delegateobj->end_date = $getdelegate->end_date;
 $delegateobj->created_by = $getdelegate->created_by;
 $delegateobj->reason = $getdelegate->reason;
-$delegateobj->status = 1; //0 = Active, 1 = Delete
+$delegateobj->status = 1; // 0 = Active, 1 = Delete.
 $delegateobj->apply_date_time = $getdelegate->apply_date_time;
 $delegateobj->approved_date = $getdelegate->approved_date;
 $delegateobj->approved_by = $getdelegate->approved_by;
-$delegateobj->action = $getdelegate->action;//0 = pending, 1 = approved, 2 = decline
-//print_r($skills);
-//print_r($deleteskills);
+$delegateobj->action = $getdelegate->action;// 0 = pending, 1 = approved, 2 = decline.
 $record = $DB->update_record('local_delegate', $delegateobj, true);
-
-$link = $CFG->wwwroot.'/local/delegate/list.php';
-redirect($link);     
+$link = $CFG->wwwroot.'/local/delegate/list.php?courseid='.$delegateobj->courses;
+redirect($link);

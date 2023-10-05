@@ -30,20 +30,17 @@ $action = required_param('action', PARAM_TEXT);
 $id = required_param('id', PARAM_INT);
 
 $delegate = $DB->get_record('local_delegate', ['id' => $id]);
-$courseid = $delegate->courses;// Course id.
+$courseid = $delegate->courses;
 $PAGE->set_context(context_course::instance($courseid));
 $now = time();
 $delegateobj = new stdClass();
 $delegateobj->id = $delegate->id;
 $delegateobj->approved_date = $now;
 $delegateobj->approved_by = $USER->id;
-$delegateobj->action = 1;// 0 = pending, 1 = approved, 2 = declined
-
+$delegateobj->status = 1;// 0 = pending, 1 = approved, 2 = declined
 $DB->update_record('local_delegate', $delegateobj, true);
 $delegate = get_delegate($delegateobj->id);
 approve_notification($delegate);
+approve_notification_delegatee($delegate);
 $link = $CFG->wwwroot."/local/delegate/list.php?courseid=".$courseid;
 redirect($link);
-
-
-
