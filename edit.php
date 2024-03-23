@@ -28,7 +28,8 @@ require_once($CFG->dirroot . '/local/delegate/lib.php');
 require_once($CFG->dirroot . '/local/delegate/delegate_application_form.php');
 $id = optional_param('id', 0, PARAM_INT);// Delegatee id.
 $courseid = optional_param('courseid', 0, PARAM_INT);// Course id.
-
+$coursecontext = context_course::instance($courseid);
+require_capability('local/delegate:update', $coursecontext);
 $coursedetails = get_course($courseid);
 
 $PAGE->set_pagelayout('standard');
@@ -100,11 +101,11 @@ if ($mform->is_cancelled()) {
         $delegateobj->id = $fromform->id;
         $DB->update_record('local_delegate', $delegateobj, true);
 
-        send_notification($delegateobj);
+        local_delegate_send_notification($delegateobj);
     } else {
         $newdelegate = $DB->insert_record('local_delegate', $delegateobj, true);
-        $delegate = get_delegate($newdelegate);
-        send_notification($delegate);
+        $delegate = local_delegate_get($newdelegate);
+        local_delegate_send_notification($delegate);
     }
     redirect($CFG->wwwroot."/local/delegate/list.php?courseid=".$courseid);
     // In this case you process validated data. $mform->get_data() returns data posted in form.

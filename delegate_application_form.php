@@ -55,7 +55,7 @@ class delegate_application_form extends moodleform {
             'noselectionstring' => get_string('select_and_search', 'local_delegate')
         );
         if ($id) {
-            $delegate = get_delegate($id);
+            $delegate = local_delegate_get($id);
             $delegateedetails = core_user::get_user($delegate->delegatee);
             $mform->addElement('static', 'textdelegatee', get_string('delegatee', 'local_delegate'), fullname($delegateedetails));
             $mform->addElement('hidden', 'delegatee', $id);

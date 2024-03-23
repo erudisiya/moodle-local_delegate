@@ -28,7 +28,9 @@ require_login();
 
 $action = required_param('action', PARAM_TEXT);
 $id = required_param('id', PARAM_INT);
-
+$courseid = required_param('courseid', PARAM_INT);
+$coursecontext = context_course::instance($courseid);
+require_capability('local/delegate:approve', $coursecontext);
 $delegate = $DB->get_record('local_delegate', ['id' => $id]);
 $courseid = $delegate->courses;
 $PAGE->set_context(context_course::instance($courseid));
@@ -39,8 +41,8 @@ $delegateobj->approved_date = $now;
 $delegateobj->approved_by = $USER->id;
 $delegateobj->status = 1;// 0 = pending, 1 = approved, 2 = declined
 $DB->update_record('local_delegate', $delegateobj, true);
-$delegate = get_delegate($delegateobj->id);
-approve_notification($delegate);
-approve_notification_delegatee($delegate);
+$delegate = local_delegate_get($delegateobj->id);
+local_delegate_approve_notification($delegate);
+local_delegate_approve_notification_delegatee($delegate);
 $link = $CFG->wwwroot."/local/delegate/list.php?courseid=".$courseid;
 redirect($link);

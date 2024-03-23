@@ -51,12 +51,12 @@ function local_delegate_extend_settings_navigation($settingsnav, $context) {
         $settingnode->add_node($foonode);
     }
 }
-function get_delegate($id) {
+function local_delegate_get($id) {
     GLOBAL $DB;
     $delegate = $DB->get_record('local_delegate', array('id' => $id));
     return $delegate;
 }
-function send_notification($delegate) {
+function local_delegate_send_notification($delegate) {
     GLOBAL $CFG;
     $touser = get_admin();
     $formuser = core_user::get_user($delegate->delegator);
@@ -86,7 +86,7 @@ function send_notification($delegate) {
     $messageid = message_send($message);
     return;
 }
-function approve_notification($delegate) {
+function local_delegate_approve_notification($delegate) {
     GLOBAL $CFG;
     $touser = core_user::get_user($delegate->delegator);
     $formuser = get_admin();
@@ -118,7 +118,7 @@ function approve_notification($delegate) {
     return;
 }
 
-function decline_notification($delegate) {
+function local_delegate_decline_notification($delegate) {
     GLOBAL $CFG;
     $delegator = core_user::get_user($delegate->delegator);
     $delegateename = core_user::get_user($delegate->delegatee);
@@ -149,7 +149,7 @@ function decline_notification($delegate) {
     $messageid = message_send($message);
     return;
 }
-function approve_notification_delegatee($delegate) {
+function local_delegate_approve_notification_delegatee($delegate) {
     GLOBAL $CFG;
     $delegatorfullname = core_user::get_user($delegate->delegator);
     $touser = core_user::get_user($delegate->delegatee);

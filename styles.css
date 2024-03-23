@@ -1,0 +1,21 @@
+.localdelegate .btn-approve{
+    background: #24ab62;
+}
+.localdelegate .btn-decline{
+    background: #ef2525;
+}
+.localdelegate .btn-action, .localdelegate .btn-action:hover {
+    color: #fff;
+    padding: 10px 8px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+.localdelegate .actionholder {
+    display: flex;
+    flex-direction: row-reverse;
+    flex-wrap: nowrap;
+    margin-bottom: 10px;
+}
+.localdelegate .btn-action i {
+    padding: 5px;
+}

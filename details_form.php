@@ -84,7 +84,8 @@ class delegate_form extends moodleform {
 
             if (has_capability('local/delegate:approve',
              context_course::instance($course->id)) && ($USER->id != $delegate->delegator)) {
-                $action = html_writer::start_tag('div', array('class' => 'actionholder'));
+                $action = html_writer::start_tag('div', array('class' => 'localdelegate'));
+                $action .= html_writer::start_tag('div', array('class' => 'actionholder'));
                 $action .= html_writer::start_tag('a', array('href' => $decline, 'class' => 'btn-decline btn-action'));
 
                 $action .= html_writer::start_tag('i', array('class' => 'fa fa-window-close', 'aria-hidden' => 'true'));
@@ -99,6 +100,7 @@ class delegate_form extends moodleform {
                 $action .= get_string('approve', 'local_delegate');
                 $action .= html_writer::end_tag('a');
                 $action .= html_writer::end_tag('div');
+                $action .= html_writer::end_tag('div');/*localdelegate*/
                 $mform->addElement('html', $action);
             }
         }

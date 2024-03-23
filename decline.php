@@ -28,6 +28,9 @@ require_login();
 
 $action = required_param('action', PARAM_TEXT);
 $id = required_param('id', PARAM_INT);
+$courseid = required_param('courseid', PARAM_INT);
+$coursecontext = context_course::instance($courseid);
+require_capability('local/delegate:decline', $coursecontext);
 $delegate = $DB->get_record('local_delegate', ['id' => $id]);
 $courseid = $delegate->courses;// Course id.
 $PAGE->set_context(context_course::instance($courseid));
@@ -38,7 +41,7 @@ $declineobj->approved_date = $now;
 $declineobj->approved_by = $USER->id;
 $declineobj->status = 2;// 0 = pending, 1 = approved, 2 = declined.
 $DB->update_record('local_delegate', $declineobj, true);
-$delegate = get_delegate($declineobj->id);
-decline_notification($delegate);
+$delegate = local_delegate_get($declineobj->id);
+local_delegate_decline_notification($delegate);
 $link = $CFG->wwwroot."/local/delegate/list.php?courseid=".$courseid;
 redirect($link);

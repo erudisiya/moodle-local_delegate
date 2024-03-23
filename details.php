@@ -25,7 +25,7 @@
 require_once(__DIR__ . '/../../config.php');
 GLOBAL $DB, $CFG;
 require_once($CFG->dirroot . '/local/delegate/lib.php');
-$PAGE->requires->css('/local/delegate/style.css');
+$PAGE->requires->css('/local/delegate/styles.css');
 require_once($CFG->dirroot . '/local/delegate/details_form.php');
 
 $PAGE->set_pagelayout('report');
@@ -34,19 +34,23 @@ $PAGE->set_title(get_string('delegatereq', 'local_delegate'));
 $PAGE->set_heading(get_string('delegatereq', 'local_delegate'));
 require_login();
 $id = required_param('id', PARAM_INT);
+$courseid = required_param('courseid', PARAM_INT);
 $action = optional_param('action', null, PARAM_TEXT);
+$coursecontext = context_course::instance($courseid);
+require_capability('local/delegate:decline', $coursecontext);
+
 if ($id) {
     if ($action == 'approve') {
         echo $OUTPUT->header();
         $yesurl = new moodle_url('/local/delegate/approve.php', array('id' => $id, 'action' => 'approve'));
-        $delegate = get_delegate($id);
+        $delegate = local_delegate_get($id);
         $nourl = new moodle_url('/local/delegate/list.php', array('id' => $delegate->courses));
         echo $OUTPUT->confirm(get_string('approvestr', 'local_delegate'), $yesurl, $nourl);
         echo $OUTPUT->footer();
         die;
     } else if ($action == 'decline') {
         echo $OUTPUT->header();
-        $delegate = get_delegate($id);
+        $delegate = local_delegate_get($id);
         $yesurl = new moodle_url('/local/delegate/decline.php', array('id' => $id, 'action' => 'decline'));
         $nourl = new moodle_url('/local/delegate/list.php', array('id' => $delegate->courses));
         echo $OUTPUT->confirm(get_string('declinestr', 'local_delegate'), $yesurl, $nourl);

@@ -27,14 +27,15 @@ GLOBAL $DB, $CFG;
 $id = optional_param('id', 0, PARAM_INT);// Delegate id.
 $courseid = required_param('courseid', PARAM_INT);// Course id.
 $action = optional_param('action', null, PARAM_TEXT);
-$PAGE->set_pagelayout('report');
+$coursedetails = get_course($courseid);
+$PAGE->set_context(context_course::instance($coursedetails->id));
 $PAGE->set_url($CFG->wwwroot."/local/delegate/list.php");
 $delegate = $DB->get_record('local_delegate', ['id' => $id]);
-$coursedetails = get_course($courseid);
+
 $PAGE->navbar->add(get_string("myhome"), new moodle_url('/my'));
 $PAGE->navbar->add($coursedetails->shortname, new moodle_url('/course/view.php?id='.$courseid));
 $PAGE->navbar->add(get_string("list"));
-$PAGE->set_context(context_course::instance($coursedetails->id));
+$PAGE->set_pagelayout('course');
 if ($courseid) {
     $form = $CFG->wwwroot . "/local/delegate/edit.php?courseid=".$courseid;
 }
@@ -69,7 +70,7 @@ $action = optional_param('action', null, PARAM_TEXT);
 if ($action == 'delete') {
     echo $OUTPUT->header();
     $actionid = optional_param('id', 0, PARAM_INT);
-    $yesurl = new moodle_url('/local/delegate/delete.php?id=' . $actionid);
+    $yesurl = new moodle_url('/local/delegate/delete.php?id=' . $actionid . '&courseid=' . $courseid);
     $nourl = new moodle_url('/local/delegate/list.php?courseid=' . $courseid);
     echo $OUTPUT->confirm(get_string('deletestr', 'local_delegate'), $yesurl, $nourl);
     echo $OUTPUT->footer();
@@ -77,7 +78,7 @@ if ($action == 'delete') {
 } else if ($action == 'approve') {
     echo $OUTPUT->header();
     $actionid = optional_param('id', 0, PARAM_INT);
-    $yesurl = new moodle_url('/local/delegate/approve.php?id=' . $actionid);
+    $yesurl = new moodle_url('/local/delegate/approve.php?id=' . $actionid . '&courseid=' . $courseid);
     $nourl = new moodle_url('/local/delegate/list.php');
     echo $OUTPUT->confirm(get_string('approvestr', 'local_delegate'), $yesurl, $nourl);
     echo $OUTPUT->footer();
@@ -85,7 +86,7 @@ if ($action == 'delete') {
 } else if ($action == 'decline') {
     echo $OUTPUT->header();
     $actionid = optional_param('id', 0, PARAM_INT);
-    $yesurl = new moodle_url('/local/delegate/decline.php?id=' . $actionid);
+    $yesurl = new moodle_url('/local/delegate/decline.php?id=' . $actionid . '&courseid=' . $courseid);
     $nourl = new moodle_url('/local/delegate/list.php');
     echo $OUTPUT->confirm(get_string('declinestr', 'local_delegate'), $yesurl, $nourl);
     echo $OUTPUT->footer();
@@ -129,7 +130,7 @@ foreach ($delegaterecords as $key => $delegaterecord) {
     $decline = new moodle_url('/local/delegate/list.php', array('id' => $delegaterecord->id,
      'action' => 'decline', 'courseid' => $courseid));
 
-    $detail = new moodle_url('/local/delegate/details.php', array('id' => $delegaterecord->id));
+    $detail = new moodle_url('/local/delegate/details.php', array('id' => $delegaterecord->id, 'courseid' => $courseid));
 
     $course = get_course($delegaterecord->courses);
     $courselink = $CFG->wwwroot."/course/view.php?id=".$course->id;

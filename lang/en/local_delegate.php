@@ -21,22 +21,22 @@
  * @copyright 2023 Sandipa Mukherjee {contact.erudisiya@gmail.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-$string['replacement_teacher'] = 'Replacement Teacher';
-$string['pluginname'] = 'Delegate Application';
-$string['delegate_application'] = 'Delegate Applications';
-$string['newapplform'] = 'New Application Form';
+$string['replacement_teacher'] = 'Replacement teacher';
+$string['pluginname'] = 'Delegate application';
+$string['delegate_application'] = 'Delegate applications';
+$string['newapplform'] = 'New application form';
 // Form labels.
-$string['delegatee'] = 'Delegatee Name';
-$string['startdate'] = 'Start Date';
-$string['enddate'] = 'End Date';
+$string['delegatee'] = 'Delegatee name';
+$string['startdate'] = 'Start date';
+$string['enddate'] = 'End date';
 $string['reason'] = 'Reason';
-$string['courses'] = 'Select Courses';
-$string['select_and_search'] = 'Search and Select';
+$string['courses'] = 'Select courses';
+$string['select_and_search'] = 'Search and select';
 // Form validation messages.
 $string['required'] = 'This field is required';
 // Form submission.
 $string['submit'] = 'Submit';
-$string['delegate_application_submitted'] = 'delegate application submitted successfully';
+$string['delegate_application_submitted'] = 'Delegate application submitted successfully';
 // Delegate Request.
 $string['decline'] = 'Decline';
 $string['approve'] = 'Approve';
@@ -44,78 +44,83 @@ $string['edit'] = 'Edit';
 $string['details'] = 'Details';
 $string['delete'] = 'Delete';
 $string['applicant'] = 'Applicant';
-$string['applicantname'] = 'Applicant Name';
+$string['applicantname'] = 'Applicant name';
 $string['rownumber'] = 'No.';
 $string['courses'] = 'Courses';
 $string['delegatee'] = 'Delegatee';
 $string['delegator'] = 'Delegator';
 $string['start_date'] = 'Start Date';
 $string['end_date'] = 'End Date';
-$string['apply_date_time'] = 'Apply Date & Time';
-$string['approved_by'] = 'Approved By';
-$string['approved_date'] = 'Apporve Date';
+$string['apply_date_time'] = 'Apply date & time';
+$string['approved_by'] = 'Approved by';
+$string['approved_date'] = 'Apporve date';
 $string['action'] = 'Action';
 $string['staus'] = 'Staus';
-$string['application'] = 'New Application for Delegate';
-$string['allaap'] = 'All Application List';
-$string['delegate:create'] = 'Create Delegate Application';
-$string['delegate:view'] = 'View Delegate Application';
-$string['delegate:approve'] = 'Approve Delegate Application';
-$string['applystr'] = 'Create Application For Delegate';
+$string['application'] = 'New application for delegate';
+$string['allaap'] = 'All application list';
+$string['delegate:create'] = 'Create delegate application';
+$string['delegate:view'] = 'View delegate application';
+$string['delegate:approve'] = 'Approve delegate application';
+$string['applystr'] = 'Create application for delegate';
 $string['messageprovider:confirmation'] = 'Confirmation of your delegate submissions';
-$string['messageprovider:submission'] = 'Notification of delegate request Approval or Decline';
-$string['messageprovider:confirmationdelegatee'] = 'Notification of approved delegate request to Delegatee';
-$string['delegate:emailnotifysubmission'] = 'Submission Notification';
-$string['delegate:delegateeapprovemail'] = 'Delegatee Approve Notification';
-$string['delegate:emailconfirmsubmission'] = 'Confirm Submission Notification';
-$string['delegate:approve'] = 'Approve Delegation Request';
-$string['delegate:update'] = 'Update Delegate Application';
-$string['delegate:delete'] = 'Update Delegate Application';
-$string['delegate:decline'] = 'Decline Delegation Request';
-$string['delegatedetails'] = 'Delegate Details';
+$string['messageprovider:submission'] = 'Notification of delegate request approval or decline';
+$string['messageprovider:confirmationdelegatee'] = 'Notification of approved delegate request to delegatee';
+$string['delegate:emailnotifysubmission'] = 'Submission notification';
+$string['delegate:delegateeapprovemail'] = 'Delegatee approve notification';
+$string['delegate:emailconfirmsubmission'] = 'Confirm submission notification';
+$string['delegate:approve'] = 'Approve delegation request';
+$string['delegate:update'] = 'Update delegate application';
+$string['delegate:delete'] = 'Update delegate application';
+$string['delegate:decline'] = 'Decline delegation request';
+$string['delegatedetails'] = 'Delegate details';
 $string['approve'] = 'Approve';
 $string['decline'] = 'Decline';
 $string['pending'] = 'Pending';
 $string['dotpending'] = '............Pending';
 $string['approved'] = 'Approved';
 $string['declined'] = 'Declined';
-$string['delegatedetails'] = 'Delegate Details';
-$string['approvestr'] = 'Confirm! Do You Want To Approve This Request?';
-$string['declinestr'] = 'Confirm ! Do You Want To Decline This Request?';
-$string['deletestr'] = 'Confirm ! Do You Want To Delete This Request?';
-$string['delegatereq'] = 'Details of Delegate Request';
-$string['delegatereqlist'] = 'Delegation Request List';
-$string['enddatevalid'] = 'End-Date must be dated after Start-Date.';
-$string['startdatevalid'] = 'Start-Date must be dated before End-Date.';
+$string['delegatedetails'] = 'Delegate details';
+$string['approvestr'] = 'Confirm! do you want to approve this request?';
+$string['declinestr'] = 'Confirm ! do you want to decline this request?';
+$string['deletestr'] = 'Confirm ! do you want to delete this request?';
+$string['delegatereq'] = 'Details of delegate request';
+$string['delegatereqlist'] = 'Delegation request list';
+$string['enddatevalid'] = 'End date must be dated after start date.';
+$string['startdatevalid'] = 'Start date must be dated before end date.';
 // Submission.
-$string['submission_notice_subject'] = 'New Delegate Application';
+$string['submission_notice_subject'] = 'New delegate application';
 $string['submission_notice_body'] =
  '<p>Hi {$a->touser}</p>
 <p>{$a->delegator} submits a delegate application for course <a href = "{$a->courseurl}" target = "_blank">{$a->course}</a>.</p>
-<p>The Delegatee name is {$a->delegatee}</p>
+<p>The delegatee name is {$a->delegatee}</p>
 <p>To approve or decline please <a href = "{$a->link}" target = "_blank">click here</a>.</p>
-<p>Thanks!</p>
+<p>thanks!</p>
 ';
 // Confirmation.
-$string['approve_notice_subject_delegator'] = 'Approve Delegate Application';
+$string['approve_notice_subject_delegator'] = 'Approve delegate application';
 $string['approve_notice_body_delegator'] =
  '<p>Hi {$a->touser}</p>
 <p>{$a->fromuser} approved your delegate application for course <a href = "{$a->courseurl}" target = "_blank">{$a->course}</a> {$a->start_date} to {$a->end_date}.</p>
-<p>The Delegatee name is {$a->delegatee}</p>
-<p>Welcome!</p>
+<p>The delegatee name is {$a->delegatee}</p>
+<p>welcome!</p>
 ';
 // Confirmationdelegatee.
-$string['approve_notice_subject_delegatee'] = 'Approve Delegate Application';
+$string['approve_notice_subject_delegatee'] = 'Approve delegate application';
 $string['approve_notice_body_delegatee'] =
  '<p>Hi {$a->touser}</p>
 <p>{$a->fromuser} approved you as delegatee for course <a href = "{$a->courseurl}" target = "_blank">{$a->course}</a> {$a->start_date} to {$a->end_date}.</p>
-<p>The Delegator name is {$a->delegator}</p>
-<p>Thank You!</p>
+<p>The delegator name is {$a->delegator}</p>
+<p>thank You!</p>
 ';
-$string['decline_notice_subject'] = 'Decline Delegate Application';
+$string['decline_notice_subject'] = 'Decline delegate application';
 $string['decline_notice_body'] =
  '<p>Hi {$a->delegator}</p>
 <p>{$a->admin} declined your delegate application for course <a href = "{$a->courseurl}" target = "_blank">{$a->course}</a> {$a->start_date} to {$a->end_date}.</p>
-<p>The Delegatee name was {$a->delegatee}</p>
-<p>Sorry!</p>
+<p>The delegatee name was {$a->delegatee}</p>
+<p>sorry!</p>
 ';
+
+$string['privacy:metadata:forum_discussion_subs'] = 'Information about the subscriptions to individual forum discussions. This includes when a user has chosen to subscribe to a discussion, or to unsubscribe from one where they would otherwise be subscribed.';
+$string['privacy:metadata:forum_discussion_subs:userid'] = 'The ID of the user with this subscription preference.';
+$string['privacy:metadata:forum_discussion_subs:discussionid'] = 'The ID of the discussion that was subscribed to.';
+$string['privacy:metadata:forum_discussion_subs:preference'] = 'The start time of the subscription.';
