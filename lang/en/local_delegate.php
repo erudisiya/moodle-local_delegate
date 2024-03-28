@@ -120,7 +120,15 @@ $string['decline_notice_body'] =
 <p>sorry!</p>
 ';
 
-$string['privacy:metadata:forum_discussion_subs'] = 'Information about the subscriptions to individual forum discussions. This includes when a user has chosen to subscribe to a discussion, or to unsubscribe from one where they would otherwise be subscribed.';
-$string['privacy:metadata:forum_discussion_subs:userid'] = 'The ID of the user with this subscription preference.';
-$string['privacy:metadata:forum_discussion_subs:discussionid'] = 'The ID of the discussion that was subscribed to.';
-$string['privacy:metadata:forum_discussion_subs:preference'] = 'The start time of the subscription.';
+$string['privacy:metadata:local_delegate'] = 'Information about the delegate to the responsibility to a delegatee depends on admin approval.';
+$string['privacy:metadata:local_delegate:delegator'] = 'The ID of the user who is delegator.';
+$string['privacy:metadata:local_delegate:delegatee'] = 'The ID of the user who is delegatee.';
+$string['privacy:metadata:local_delegate:start_date'] = 'The start time of the delegation request.';
+$string['privacy:metadata:local_delegate:end_date'] = 'The end time of the delegation request.';
+
+$string['privacy:metadata:local_delegate:created_by'] = 'The ID of the user who creates the delegation request.';
+$string['privacy:metadata:local_delegate:apply_date_time'] = 'The time of the creation of delegation request.';
+$string['privacy:metadata:local_delegate:modifyed_by'] = 'The ID of the user who modifies the delegation request.';
+$string['privacy:metadata:local_delegate:modify_datetime'] = 'The time of the modification of delegation request.';
+$string['privacy:metadata:local_delegate:approved_by'] = 'The ID of the user who is approve the delegation request.';
+$string['privacy:metadata:local_delegate:approved_date'] = 'The date of approval of the delegation request.';
