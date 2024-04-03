@@ -78,60 +78,101 @@ class provider implements
      */
     public static function get_users_in_context(userlist $userlist) {
         $context = $userlist->get_context();
-
-        if (!$context instanceof \context_course) {
+        if (!$context instanceof \context_system) {
             return;
         }
-
-        // Fetch all choice answers.
-        $sql = "SELECT ca.userid
-                  FROM {course_modules} cm
-                  JOIN {modules} m ON m.id = cm.module AND m.name = :modname
-                  JOIN {choice} ch ON ch.id = cm.instance
-                  JOIN {choice_options} co ON co.choiceid = ch.id
-                  JOIN {choice_answers} ca ON ca.optionid = co.id AND ca.choiceid = ch.id
-                 WHERE cm.id = :cmid";
-
-        $params = [
-            'cmid'      => $context->instanceid,
-            'modname'   => 'choice',
-        ];
-
-        $userlist->add_from_sql('userid', $sql, $params);
-
+        $sql = 'SELECT DISTINCT delegator FROM {local_delegate}';
+        $userlist->add_from_sql('userid', $sql, []);
     }
     /**
-     * Export all user data for the specified user, in the specified contexts, using the supplied exporter instance.
+     * Get the lists of contexts that contain user information for the specified user.
      *
-     * @param   approved_contextlist    $contextlist    The approved contexts to export information for.
+     * @param int $userid
+     * @return contextlist
      */
-    public static function export_user_data(approved_contextlist $contextlist) {}
-    /**
-     * Delete multiple users within a single context.
-     *
-     * @param approved_userlist $userlist The approved context and user information to delete information for.
-     */
-    public static function delete_data_for_users(approved_userlist $userlist) {
-        global $DB;
+    public static function get_contexts_for_userid(int $userid) : contextlist {
+        $contextlist = new contextlist();
+        // I know we should really provide the proper contexts.
+        // This can be so messy, we just return system context. Payments should really be system context anyway.
+        $contextlist->add_system_context();
+        return $contextlist;
     }
     /**
-     * Delete all data for all users in the specified context.
+     * Delete all use data which matches the specified context.
      *
-     * @param \context $context the context to delete in.
+     * @param context $context The module context.
      */
     public static function delete_data_for_all_users_in_context(\context $context) {
         global $DB;
-
-        if (!$context instanceof \context_course) {
+        if ($context->contextlevel != CONTEXT_SYSTEM) {
             return;
         }
 
-        /*if ($cm = get_coursemodule_from_id('choice', $context->instanceid)) {
-            $DB->delete_records('choice_answers', ['choiceid' => $cm->instance]);
-        }*/
+        // Delete everything.
+        $DB->delete_records('local_delegate', null);
     }
-    public static function get_contexts_for_userid(int $userid) : contextlist {}
+    /**
+     * Delete all user data for the specified user, in the specified contexts.
+     *
+     * @param approved_contextlist $contextlist The approved contexts and user information to delete information for.
+     */
     public static function delete_data_for_user(approved_contextlist $contextlist) {
         global $DB;
+
+        if (empty($contextlist->count())) {
+            return;
+        }
+
+        $user = $contextlist->get_user();
+        foreach ($contextlist->get_contexts() as $context) {
+            // Check that the context is a system context.
+            if ($context->contextlevel != CONTEXT_SYSTEM) {
+                continue;
+            }
+            $DB->delete_records_select('local_delegate', 'delegator = :delegator', ['delegator' => $user->id]);
+        }
     }
+    /**
+     * Delete multiple users within a single context.
+     *
+     * @param  approved_userlist $userlist The approved context and user information to delete information for.
+     */
+    public static function delete_data_for_users(approved_userlist $userlist) {
+        global $DB;
+
+        $context = $userlist->get_context();
+        if (!$context instanceof \context_system) {
+            return;
+        }
+
+        $userids = $userlist->get_userids();
+        list($usersql, $userparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED);
+        $DB->delete_records_select('local_delegate', 'delegator '.$usersql, $userparams);
+    }
+    /**
+     * Export all user data for the specified payment record, and the given context.
+     *
+     * @param \context $context Context
+     * @param array $subcontext The location within the current context that the payment data belongs
+     * @param \stdClass $payment The payment record
+     */
+    public static function export_user_data(approved_contextlist $contextlist) {
+        global $DB;
+        $user = $contextlist->get_user();
+        $subcontext[] = get_string('pluginname', 'local_delegate');
+        $record = $DB->get_record('local_delegate', ['delegator' => $user->id]);
+
+        $data = (object) [
+            'delegator' => $record->delegator,
+            'delegatee' => $record->delegatee,
+            'courses' => $record->courses,
+            'reason' => $record->reason,
+            'status' => $record->status,
+        ];
+        writer::with_context($context)->export_data(
+            $subcontext,
+            $data
+        );
+    }
+
 }
