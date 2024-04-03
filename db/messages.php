@@ -22,29 +22,29 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
-$messageproviders = array (
+$messageproviders = [
     // Notify delegatee when new request generated.
-    'submission' => array (
+    'submission' => [
         'defaults' => [
             'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_LOGGEDIN + MESSAGE_DEFAULT_LOGGEDOFF,
-            'email' => MESSAGE_PERMITTED
+            'email' => MESSAGE_PERMITTED,
         ],
-        'capability'  => 'local/delegate:emailnotifysubmission'
-    ),
+        'capability'  => 'local/delegate:emailnotifysubmission',
+    ],
     // Approve a delegate Request.
-    'confirmation' => array (
+    'confirmation' => [
         'defaults' => [
             'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_LOGGEDIN + MESSAGE_DEFAULT_LOGGEDOFF,
-            'email' => MESSAGE_PERMITTED
+            'email' => MESSAGE_PERMITTED,
         ],
-        'capability'  => 'local/delegate:emailconfirmsubmission'
-    ),
+        'capability'  => 'local/delegate:emailconfirmsubmission',
+    ],
     // Approved a delegate request delegatee.
-    'confirmationdelegatee' => array (
+    'confirmationdelegatee' => [
         'defaults' => [
             'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_LOGGEDIN + MESSAGE_DEFAULT_LOGGEDOFF,
-            'email' => MESSAGE_PERMITTED
+            'email' => MESSAGE_PERMITTED,
         ],
-        'capability'  => 'local/delegate:delegateeapprovemail'
-    )
-);
+        'capability'  => 'local/delegate:delegateeapprovemail',
+    ],
+];

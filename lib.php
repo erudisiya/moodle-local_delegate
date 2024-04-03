@@ -36,7 +36,7 @@ function local_delegate_extend_settings_navigation($settingsnav, $context) {
     if ($settingnode = $settingsnav->find('courseadmin',
          navigation_node::TYPE_COURSE)) {
         $strfoo = get_string('pluginname', 'local_delegate');
-        $url = new moodle_url('/local/delegate/list.php', array('courseid' => $PAGE->course->id));
+        $url = new moodle_url('/local/delegate/list.php', ['courseid' => $PAGE->course->id]);
         $foonode = navigation_node::create(
             $strfoo,
             $url,
@@ -53,11 +53,11 @@ function local_delegate_extend_settings_navigation($settingsnav, $context) {
 }
 function local_delegate_get($id) {
     GLOBAL $DB;
-    $delegate = $DB->get_record('local_delegate', array('id' => $id));
+    $delegate = $DB->get_record('local_delegate', ['id' => $id]);
     return $delegate;
 }
 function local_delegate_send_notification($delegate) {
-    GLOBAL $CFG;
+    GLOBAL $CFG, $SITE;
     $touser = get_admin();
     $formuser = core_user::get_user($delegate->delegator);
     $delegateename = core_user::get_user($delegate->delegatee);
@@ -79,8 +79,8 @@ function local_delegate_send_notification($delegate) {
     $message->smallmessage = get_string('submission_notice_subject', 'local_delegate');
     $message->notification = 1; // Because this is a notification generated from Moodle, not a user-to-user message.
     $message->contexturl = (new \moodle_url('/course/'))->out(false); // A relevant URL for the notification.
-    $message->contexturlname = 'abcd'; // Link title explaining where users get to for the contexturl.
-    $content = array('*' => array('header' => '  ', 'footer' => '  ')); // Extra content for specific processor.
+    $message->contexturlname = $SITE->shortname; // Link title explaining where users get to for the contexturl.
+    $content = ['*' => ['header' => '  ', 'footer' => '  ']]; // Extra content for specific processor.
     $message->set_additional_content('email', $content);
     // Actually send the message.
     $messageid = message_send($message);
@@ -111,7 +111,7 @@ function local_delegate_approve_notification($delegate) {
     $message->smallmessage = get_string('approve_notice_subject_delegator', 'local_delegate');
     $message->notification = 1; // Because this is a notification generated from Moodle, not a user-to-user message.
 
-    $content = array('*' => array('header' => '  ', 'footer' => '  ')); // Extra content for specific processor.
+    $content = ['*' => ['header' => '  ', 'footer' => '  ']]; // Extra content for specific processor.
     $message->set_additional_content('email', $content);
     // Actually send the message.
     $messageid = message_send($message);
@@ -119,7 +119,7 @@ function local_delegate_approve_notification($delegate) {
 }
 
 function local_delegate_decline_notification($delegate) {
-    GLOBAL $CFG;
+    GLOBAL $CFG, $SITE;
     $delegator = core_user::get_user($delegate->delegator);
     $delegateename = core_user::get_user($delegate->delegatee);
     $formuser = get_admin();
@@ -142,8 +142,8 @@ function local_delegate_decline_notification($delegate) {
     $message->smallmessage = get_string('decline_notice_subject', 'local_delegate');
     $message->notification = 1; // Because this is a notification generated from Moodle, not a user-to-user message.
     $message->contexturl = (new \moodle_url('/course/'))->out(false); // A relevant URL for the notification.
-    $message->contexturlname = 'xyz'; // Link title explaining where users get to for the contexturl.
-    $content = array('*' => array('header' => '  ', 'footer' => '  ')); // Extra content for specific processor.
+    $message->contexturlname = $SITE->shortname; // Link title explaining where users get to for the contexturl.
+    $content = ['*' => ['header' => '  ', 'footer' => '  ']]; // Extra content for specific processor.
     $message->set_additional_content('email', $content);
     // Actually send the message.
     $messageid = message_send($message);
@@ -173,7 +173,7 @@ function local_delegate_approve_notification_delegatee($delegate) {
     $message->smallmessage = get_string('approve_notice_body_delegatee', 'local_delegate');
     $message->notification = 1; // Because this is a notification generated from Moodle, not a user-to-user message.
 
-    $content = array('*' => array('header' => '  ', 'footer' => '  ')); // Extra content for specific processor.
+    $content = ['*' => ['header' => '  ', 'footer' => '  ']]; // Extra content for specific processor.
     $message->set_additional_content('email', $content);
     // Actually send the message.
     $messageid = message_send($message);

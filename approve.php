@@ -30,6 +30,7 @@ $action = required_param('action', PARAM_TEXT);
 $id = required_param('id', PARAM_INT);
 $courseid = required_param('courseid', PARAM_INT);
 $coursecontext = context_course::instance($courseid);
+require_sesskey();
 require_capability('local/delegate:approve', $coursecontext);
 $delegate = $DB->get_record('local_delegate', ['id' => $id]);
 $courseid = $delegate->courses;

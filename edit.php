@@ -34,7 +34,7 @@ $coursedetails = get_course($courseid);
 
 $PAGE->set_pagelayout('standard');
 $PAGE->navbar->add(get_string("myhome"), new moodle_url('/my'));
-$PAGE->navbar->add($coursedetails->shortname, new moodle_url('/course/view.php', array('id' => $courseid)));
+$PAGE->navbar->add($coursedetails->shortname, new moodle_url('/course/view.php', ['id' => $courseid]));
 $PAGE->navbar->add(get_string("list"), new moodle_url('/local/delegate/list.php?courseid='.$courseid));
 $PAGE->navbar->add(get_string("edit"));
 if ($id) {
@@ -42,7 +42,7 @@ if ($id) {
     $PAGE->set_context(context_course::instance($course->id));
     $PAGE->navbar->add($course->shortname, new moodle_url('/course/view.php?id='.$id));
     $PAGE->navbar->add(get_string("allaap", "local_delegate"), new moodle_url('/local/delegate/list.php?id='.$id));
-    $form = new moodle_url('/local/delegate/list.php', array('id' => $id, 'courseid' => $courseid));
+    $form = new moodle_url('/local/delegate/list.php', ['id' => $id, 'courseid' => $courseid]);
 } else {
     $PAGE->set_context(context_system::instance());
     $form = $CFG->wwwroot . "/local/delegate/list.php?courseid=".$courseid;
@@ -52,16 +52,16 @@ $PAGE->set_url($CFG->wwwroot."/local/delegate/list.php");
 
 $PAGE->set_title(get_string('applystr', 'local_delegate'));
 require_login();
-$tab = html_writer::start_tag('ul', array('class' => 'rui-nav-tabs nav nav-tabs'));
-    $tab .= html_writer::start_tag('li', array('class' => 'nav-item'));
-        $tab .= html_writer::start_tag('a', array('class' => 'nav-link', 'title' => "All Application List", 'href' => $form));
+$tab = html_writer::start_tag('ul', ['class' => 'rui-nav-tabs nav nav-tabs']);
+    $tab .= html_writer::start_tag('li', ['class' => 'nav-item']);
+        $tab .= html_writer::start_tag('a', ['class' => 'nav-link', 'title' => "All Application List", 'href' => $form]);
             $tab .= get_string('allaap', 'local_delegate');
         $tab .= html_writer::end_tag('a');
 
     $tab .= html_writer::end_tag('li');
 
-    $tab .= html_writer::start_tag('li', array('class' => 'nav-item'));
-        $tab .= html_writer::start_tag('a', array('class' => 'nav-link active', 'title' => "New Application Form"));
+    $tab .= html_writer::start_tag('li', ['class' => 'nav-item']);
+        $tab .= html_writer::start_tag('a', ['class' => 'nav-link active', 'title' => get_string('newappform', 'local_delegate')]);
             $tab .= get_string('application', 'local_delegate');
         $tab .= html_writer::end_tag('a');
 
@@ -69,10 +69,10 @@ $tab = html_writer::start_tag('ul', array('class' => 'rui-nav-tabs nav nav-tabs'
 $tab .= html_writer::end_tag('ul');
 
 if ($courseid) {
-    $customdata = array('id' => $id, 'courseid' => $courseid);
+    $customdata = ['id' => $id, 'courseid' => $courseid];
     $mform = new delegate_application_form(null, $customdata);
 } else {
-    $customdata = array('courseid' => $courseid);
+    $customdata = ['courseid' => $courseid];
     $mform = new delegate_application_form(null, $customdata);
 }
 
@@ -112,7 +112,7 @@ if ($mform->is_cancelled()) {
 } else {
 
     if (isset($id) && ($id > 0)) {
-        $delegaterec = $DB->get_record('local_delegate', array("id" => $id));
+        $delegaterec = $DB->get_record('local_delegate', ["id" => $id]);
         $delegaterec->startdate = $delegaterec->start_date;
         $delegaterec->enddate = $delegaterec->end_date;
         $delegaterec->courses = explode(",", $delegaterec->courses);

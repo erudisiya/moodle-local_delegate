@@ -132,3 +132,4 @@ $string['privacy:metadata:local_delegate:modifyed_by'] = 'The ID of the user who
 $string['privacy:metadata:local_delegate:modify_datetime'] = 'The time of the modification of delegation request.';
 $string['privacy:metadata:local_delegate:approved_by'] = 'The ID of the user who is approve the delegation request.';
 $string['privacy:metadata:local_delegate:approved_date'] = 'The date of approval of the delegation request.';
+$string['newappform'] = 'New Application Form';

@@ -29,6 +29,7 @@ require_login();
 $id = required_param('id', PARAM_INT);
 $courseid = required_param('courseid', PARAM_INT);
 $coursecontext = context_course::instance($courseid);
+require_sesskey();
 require_capability('local/delegate:delete', $coursecontext);
 $getdelegate = $DB->get_record('local_delegate', ['id' => $id]);
 

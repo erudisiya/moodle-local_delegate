@@ -47,16 +47,18 @@ if (!has_capability('local/delegate:view', context_course::instance($courseid)))
 }
 if ($action == 'approve') {
     echo $OUTPUT->header();
-    $yesurl = new moodle_url('/local/delegate/approve.php', array('id' => $id, 'action' => 'approve', 'courseid' => $courseid));
+    $yesurl = new moodle_url('/local/delegate/approve.php',
+    ['id' => $id, 'action' => 'approve', 'courseid' => $courseid, 'sesskey' => sesskey()]);
     $delegate = $DB->get_record('local_delegate', ['id' => $id]);
-    $nourl = new moodle_url('/local/delegate/list.php', array('courseid' => $courseid));
+    $nourl = new moodle_url('/local/delegate/list.php', ['courseid' => $courseid]);
     echo $OUTPUT->confirm(get_string('approvestr', 'local_delegate'), $yesurl, $nourl);
     echo $OUTPUT->footer();
     die;
 } else if ($action == 'decline') {
     echo $OUTPUT->header();
-    $yesurl = new moodle_url('/local/delegate/decline.php', array('id' => $id, 'action' => 'decline', 'courseid' => $courseid));
-    $nourl = new moodle_url('/local/delegate/list.php', array('courseid' => $courseid));
+    $yesurl = new moodle_url('/local/delegate/decline.php',
+    ['id' => $id, 'action' => 'decline', 'courseid' => $courseid, 'sesskey' => sesskey()]);
+    $nourl = new moodle_url('/local/delegate/list.php', ['courseid' => $courseid]);
     echo $OUTPUT->confirm(get_string('declinestr', 'local_delegate'), $yesurl, $nourl);
     echo $OUTPUT->footer();
     die;
@@ -70,7 +72,7 @@ $action = optional_param('action', null, PARAM_TEXT);
 if ($action == 'delete') {
     echo $OUTPUT->header();
     $actionid = optional_param('id', 0, PARAM_INT);
-    $yesurl = new moodle_url('/local/delegate/delete.php?id=' . $actionid . '&courseid=' . $courseid);
+    $yesurl = new moodle_url('/local/delegate/delete.php', ['id' => $actionid, 'courseid' => $courseid, 'sesskey' => sesskey()]);
     $nourl = new moodle_url('/local/delegate/list.php?courseid=' . $courseid);
     echo $OUTPUT->confirm(get_string('deletestr', 'local_delegate'), $yesurl, $nourl);
     echo $OUTPUT->footer();
@@ -78,7 +80,7 @@ if ($action == 'delete') {
 } else if ($action == 'approve') {
     echo $OUTPUT->header();
     $actionid = optional_param('id', 0, PARAM_INT);
-    $yesurl = new moodle_url('/local/delegate/approve.php?id=' . $actionid . '&courseid=' . $courseid);
+    $yesurl = new moodle_url('/local/delegate/approve.php', ['id' => $actionid, 'courseid' => $courseid, 'sesskey' => sesskey()]);
     $nourl = new moodle_url('/local/delegate/list.php');
     echo $OUTPUT->confirm(get_string('approvestr', 'local_delegate'), $yesurl, $nourl);
     echo $OUTPUT->footer();
@@ -86,21 +88,21 @@ if ($action == 'delete') {
 } else if ($action == 'decline') {
     echo $OUTPUT->header();
     $actionid = optional_param('id', 0, PARAM_INT);
-    $yesurl = new moodle_url('/local/delegate/decline.php?id=' . $actionid . '&courseid=' . $courseid);
+    $yesurl = new moodle_url('/local/delegate/decline.php', ['id' => $actionid, 'courseid' => $courseid, 'sesskey' => sesskey()]);
     $nourl = new moodle_url('/local/delegate/list.php');
     echo $OUTPUT->confirm(get_string('declinestr', 'local_delegate'), $yesurl, $nourl);
     echo $OUTPUT->footer();
     die;
 }
 if (has_capability('local/delegate:approve', context_course::instance($courseid))) {
-    $delegaterecords = $DB->get_recordset('local_delegate', array(), 'apply_date_time ASC');
+    $delegaterecords = $DB->get_recordset('local_delegate', [], 'apply_date_time ASC');
 } else {
     $delegaterecords = $DB->get_recordset('local_delegate', ['delegator' => $USER->id], 'apply_date_time ASC');
 }
 $table = new html_table();
 $table->id = 'list';
 
-$table->head = array(
+$table->head = [
     get_string('rownumber', 'local_delegate'),
     get_string('courses', 'local_delegate'),
     get_string('delegatee', 'local_delegate'),
@@ -111,31 +113,32 @@ $table->head = array(
     get_string('approved_by', 'local_delegate'),
     get_string('approved_date', 'local_delegate'),
     get_string('staus', 'local_delegate'),
-    get_string('action', 'local_delegate')
-);
+    get_string('action', 'local_delegate'),
+];
 
-$table->align = array('center', 'center', 'center', 'center', 'center', 'center', 'center', 'center', 'center', 'center', 'center');
+$table->align = ['center', 'center', 'center', 'center', 'center', 'center', 'center', 'center', 'center', 'center', 'center'];
 $action = "";
 $delegatecount = 1;
 foreach ($delegaterecords as $key => $delegaterecord) {
     $delete = new moodle_url('/local/delegate/list.php',
-     array('id' => $delegaterecord->id, 'action' => 'delete', 'courseid' => $courseid));
+     ['id' => $delegaterecord->id, 'action' => 'delete', 'courseid' => $courseid, 'sesskey' => sesskey()]);
 
-    $edit = new moodle_url('/local/delegate/edit.php', array('id' => $delegaterecord->id,
-     'action' => 'update', 'courseid' => $courseid));
+    $edit = new moodle_url('/local/delegate/edit.php', ['id' => $delegaterecord->id,
+     'action' => 'update', 'courseid' => $courseid, 'sesskey' => sesskey()]);
 
-    $approve = new moodle_url('/local/delegate/list.php', array('id' => $delegaterecord->id,
-     'action' => 'approve', 'courseid' => $courseid));
+    $approve = new moodle_url('/local/delegate/list.php', ['id' => $delegaterecord->id,
+     'action' => 'approve', 'courseid' => $courseid, 'sesskey' => sesskey()]);
 
-    $decline = new moodle_url('/local/delegate/list.php', array('id' => $delegaterecord->id,
-     'action' => 'decline', 'courseid' => $courseid));
+    $decline = new moodle_url('/local/delegate/list.php', ['id' => $delegaterecord->id,
+     'action' => 'decline', 'courseid' => $courseid, 'sesskey' => sesskey()]);
 
-    $detail = new moodle_url('/local/delegate/details.php', array('id' => $delegaterecord->id, 'courseid' => $courseid));
+    $detail = new moodle_url('/local/delegate/details.php',
+    ['id' => $delegaterecord->id, 'courseid' => $courseid, 'sesskey' => sesskey()]);
 
     $course = get_course($delegaterecord->courses);
     $courselink = $CFG->wwwroot."/course/view.php?id=".$course->id;
 
-    $coursename = html_writer::start_tag('a', array('href' => $courselink));
+    $coursename = html_writer::start_tag('a', ['href' => $courselink]);
     $coursename .= $course->fullname;
     $coursename .= html_writer::end_tag('a');
 
@@ -150,21 +153,21 @@ foreach ($delegaterecords as $key => $delegaterecord) {
     $delegateename = core_user::get_user($delegaterecord->delegatee);
     $userprofileurl = $CFG->wwwroot."/user/profile.php?id=".$delegaterecord->delegatee;
 
-    $delegateenamestr = html_writer::start_tag('a', array('href' => $userprofileurl));
+    $delegateenamestr = html_writer::start_tag('a', ['href' => $userprofileurl]);
     $delegateenamestr .= fullname($delegateename);
     $delegateenamestr .= html_writer::end_tag('a');
 
     $applicantname = core_user::get_user($delegaterecord->delegator);
     $userprofileurl = $CFG->wwwroot."/user/profile.php?id=".$delegaterecord->delegator;
 
-    $applicantnamestr = html_writer::start_tag('a', array('href' => $userprofileurl));
+    $applicantnamestr = html_writer::start_tag('a', ['href' => $userprofileurl]);
     $applicantnamestr .= fullname($applicantname);
     $applicantnamestr .= html_writer::end_tag('a');
 
     if ($delegaterecord->approved_by) {
         $approvername = core_user::get_user($delegaterecord->approved_by);
         $userprofileurl = $CFG->wwwroot."/user/profile.php?id=".$delegaterecord->approved_by;
-        $approvernamestr = html_writer::start_tag('a', array('href' => $userprofileurl));
+        $approvernamestr = html_writer::start_tag('a', ['href' => $userprofileurl]);
         $approvernamestr .= fullname($approvername);
         $approvernamestr .= html_writer::end_tag('a');
     } else {
@@ -173,39 +176,39 @@ foreach ($delegaterecords as $key => $delegaterecord) {
 
     if ($delegaterecord->delegator != $USER->id) {
         if (has_capability('local/delegate:decline', context_course::instance($courseid))) {
-            $action .= html_writer::start_tag('a', array('href' => $decline, 'title' => get_string('decline', 'local_delegate')));
-            $action .= html_writer::start_tag('i', array('class' => 'fa fa-window-close', 'aria-hidden' => 'true'));
+            $action .= html_writer::start_tag('a', ['href' => $decline, 'title' => get_string('decline', 'local_delegate')]);
+            $action .= html_writer::start_tag('i', ['class' => 'fa fa-window-close', 'aria-hidden' => 'true']);
             $action .= html_writer::end_tag('i');
             $action .= html_writer::end_tag('a').'&nbsp';
         }
     }
     if ($delegaterecord->delegator != $USER->id) {
         if (has_capability('local/delegate:approve', context_course::instance($courseid))) {
-            $action .= html_writer::start_tag('a', array('href' => $approve, 'title' => get_string('approve', 'local_delegate')));
-            $action .= html_writer::start_tag('i', array('class' => 'fa fa-check-square', 'aria-hidden' => 'true'));
+            $action .= html_writer::start_tag('a', ['href' => $approve, 'title' => get_string('approve', 'local_delegate')]);
+            $action .= html_writer::start_tag('i', ['class' => 'fa fa-check-square', 'aria-hidden' => 'true']);
             $action .= html_writer::end_tag('i');
             $action .= html_writer::end_tag('a').'&nbsp';
         }
     }
     if ($delegaterecord->status == 0 && $delegaterecord->delegator == $USER->id) {
         if (has_capability('local/delegate:update', context_course::instance($courseid))) {
-            $action .= html_writer::start_tag('a', array('href' => $edit, 'title' => get_string('edit', 'local_delegate')));
-            $action .= html_writer::start_tag('i', array('class' => 'fa fa-pencil', 'aria-hidden' => 'true'));
+            $action .= html_writer::start_tag('a', ['href' => $edit, 'title' => get_string('edit', 'local_delegate')]);
+            $action .= html_writer::start_tag('i', ['class' => 'fa fa-pencil', 'aria-hidden' => 'true']);
             $action .= html_writer::end_tag('i');
             $action .= html_writer::end_tag('a').'&nbsp';
         }
     }
     if ($delegaterecord->status == 0 && $delegaterecord->delegator == $USER->id) {
         if (has_capability('local/delegate:delete', context_course::instance($courseid))) {
-            $action .= html_writer::start_tag('a', array('href' => $delete, 'title' => get_string('delete', 'local_delegate')));
-            $action .= html_writer::start_tag('i', array('class' => 'fa fa-trash', 'aria-hidden' => 'true'));
+            $action .= html_writer::start_tag('a', ['href' => $delete, 'title' => get_string('delete', 'local_delegate')]);
+            $action .= html_writer::start_tag('i', ['class' => 'fa fa-trash', 'aria-hidden' => 'true']);
             $action .= html_writer::end_tag('i');
             $action .= html_writer::end_tag('a').'&nbsp';
         }
     }
     if (has_capability('local/delegate:view', context_course::instance($courseid))) {
-        $action .= html_writer::start_tag('a', array('href' => $detail, 'title' => get_string('details', 'local_delegate')));
-        $action .= html_writer::start_tag('i', array('class' => 'fa fa-external-link-square', 'aria-hidden' => 'true'));
+        $action .= html_writer::start_tag('a', ['href' => $detail, 'title' => get_string('details', 'local_delegate')]);
+        $action .= html_writer::start_tag('i', ['class' => 'fa fa-external-link-square', 'aria-hidden' => 'true']);
         $action .= html_writer::end_tag('i');
         $action .= html_writer::end_tag('a').'&nbsp';
     }
@@ -215,7 +218,7 @@ foreach ($delegaterecords as $key => $delegaterecord) {
     } else {
         $approveddatestr = '-';
     }
-    $table->data[] = array(
+    $table->data[] = [
         $delegatecount,
         $coursename,
         $delegateenamestr,
@@ -226,23 +229,24 @@ foreach ($delegaterecords as $key => $delegaterecord) {
         $approvernamestr,
         $approveddatestr,
         $actionstr, // 0 = pending, 1 = approved, 2 = decline.
-        $action
-    );
+        $action,
+    ];
     $action = "";
     $delegatecount++;
 }
 $delegaterecords->close();
 
-$tab = html_writer::start_tag('ul', array('class' => 'rui-nav-tabs nav nav-tabs'));
-    $tab .= html_writer::start_tag('li', array('class' => 'nav-item'));
-    $tab .= html_writer::start_tag('a', array('class' => 'nav-link active', 'title' => get_string('allaap', 'local_delegate')));
+$tab = html_writer::start_tag('ul', ['class' => 'rui-nav-tabs nav nav-tabs']);
+    $tab .= html_writer::start_tag('li', ['class' => 'nav-item']);
+    $tab .= html_writer::start_tag('a', ['class' => 'nav-link active', 'title' => get_string('allaap', 'local_delegate')]);
         $tab .= get_string('allaap', 'local_delegate');
     $tab .= html_writer::end_tag('a');
 
     $tab .= html_writer::end_tag('li');
 if (has_capability('local/delegate:create', context_course::instance($courseid))) {
-        $tab .= html_writer::start_tag('li', array('class' => 'nav-item'));
-        $tab .= html_writer::start_tag('a', array('class' => 'nav-link', 'title' => "New Application Form", 'href' => $form));
+        $tab .= html_writer::start_tag('li', ['class' => 'nav-item']);
+        $tab .= html_writer::start_tag('a',
+        ['class' => 'nav-link', 'title' => get_string('newappform', 'local_delegate'), 'href' => $form]);
             $tab .= get_string('application', 'local_delegate');
         $tab .= html_writer::end_tag('a');
 

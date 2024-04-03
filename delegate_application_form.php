@@ -25,9 +25,9 @@ class delegate_application_form extends moodleform {
     public function definition() {
         global $USER, $CFG;
         require_once($CFG->dirroot . '/local/delegate/lib.php');
-        $delegatee = array();
+        $delegatee = [];
         $mform = $this->_form;
-        $coursenames = array();
+        $coursenames = [];
         if (isset($this->_customdata) && !empty($this->_customdata)) {
             if (isset($this->_customdata['id'])) {
                 $id = $this->_customdata['id'];// Delegate id.
@@ -50,10 +50,10 @@ class delegate_application_form extends moodleform {
             }
         }
 
-        $options = array(
+        $options = [
             'multiple' => false,
-            'noselectionstring' => get_string('select_and_search', 'local_delegate')
-        );
+            'noselectionstring' => get_string('select_and_search', 'local_delegate'),
+        ];
         if ($id) {
             $delegate = local_delegate_get($id);
             $delegateedetails = core_user::get_user($delegate->delegatee);
@@ -86,7 +86,7 @@ class delegate_application_form extends moodleform {
         $this->definition_after_data();
     }
     public function validation($data, $files) {
-        $errors = array();
+        $errors = [];
 
         if ($data["startdate"] >= $data["enddate"]) {
             $errors['enddate'] = get_string('enddatevalid', 'local_delegate');

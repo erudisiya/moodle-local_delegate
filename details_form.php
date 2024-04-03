@@ -46,19 +46,19 @@ class delegate_form extends moodleform {
 
             $userprofileurl = $CFG->wwwroot."/user/profile.php?id=".$delegate->delegatee;
 
-            $delegateenamestr = html_writer::start_tag('a', array('href' => $userprofileurl));
+            $delegateenamestr = html_writer::start_tag('a', ['href' => $userprofileurl]);
             $delegateenamestr .= fullname($delegateename);
             $delegateenamestr .= html_writer::end_tag('a');
 
-            $applicantnamestr = html_writer::start_tag('a', array('href' => $userprofileurl));
+            $applicantnamestr = html_writer::start_tag('a', ['href' => $userprofileurl]);
             $applicantnamestr .= fullname($applicantname);
             $applicantnamestr .= html_writer::end_tag('a');
 
-            $approvedbynamestr = html_writer::start_tag('a', array('href' => $userprofileurl));
+            $approvedbynamestr = html_writer::start_tag('a', ['href' => $userprofileurl]);
             $approvedbynamestr .= fullname($approvedby);
             $approvedbynamestr .= html_writer::end_tag('a');
 
-            $coursename = html_writer::start_tag('a', array('href' => $courselink));
+            $coursename = html_writer::start_tag('a', ['href' => $courselink]);
             $coursename .= $course->fullname;
             $coursename .= html_writer::end_tag('a');
             $mform->addElement('header', 'delegatedetails', get_string('delegatedetails', 'local_delegate'));
@@ -79,22 +79,32 @@ class delegate_form extends moodleform {
                 $mform->addElement('static', 'approvedby', get_string('dotpending', 'local_delegate'));
             }
 
-            $approve = new moodle_url('/local/delegate/details.php', array('id' => $delegate->id, 'action' => 'approve'));
-            $decline = new moodle_url('/local/delegate/details.php', array('id' => $delegate->id, 'action' => 'decline'));
+            $approve = new moodle_url('/local/delegate/details.php', ['id' => $delegate->id, 'action' => 'approve']);
+            $decline = new moodle_url('/local/delegate/details.php', ['id' => $delegate->id, 'action' => 'decline']);
+            if ($delegate->status == 0) {
+                if (has_capability('local/delegate:approve',
+                 context_course::instance($course->id)) && ($USER->id != $delegate->delegator)) {
+                    $approvedeclineflag = 1;
+                } else if (is_siteadmin()) {
+                    $approvedeclineflag = 1;
+                } else {
+                    $approvedeclineflag = 0;
+                }
+            } else {
+                $approvedeclineflag = 0;
+            }
+            if ($approvedeclineflag) {
+                $action = html_writer::start_tag('div', ['class' => 'localdelegate']);
+                $action .= html_writer::start_tag('div', ['class' => 'actionholder']);
+                $action .= html_writer::start_tag('a', ['href' => $decline, 'class' => 'btn-decline btn-action']);
 
-            if (has_capability('local/delegate:approve',
-             context_course::instance($course->id)) && ($USER->id != $delegate->delegator)) {
-                $action = html_writer::start_tag('div', array('class' => 'localdelegate'));
-                $action .= html_writer::start_tag('div', array('class' => 'actionholder'));
-                $action .= html_writer::start_tag('a', array('href' => $decline, 'class' => 'btn-decline btn-action'));
-
-                $action .= html_writer::start_tag('i', array('class' => 'fa fa-window-close', 'aria-hidden' => 'true'));
+                $action .= html_writer::start_tag('i', ['class' => 'fa fa-window-close', 'aria-hidden' => 'true']);
                 $action .= html_writer::end_tag('i');
                 $action .= get_string('decline', 'local_delegate');
                 $action .= html_writer::end_tag('a').'&nbsp';
 
-                $action .= html_writer::start_tag('a', array('href' => $approve, 'class' => 'btn-approve btn-action'));
-                $action .= html_writer::start_tag('i', array('class' => 'fa fa-check-square', 'aria-hidden' => 'true'));
+                $action .= html_writer::start_tag('a', ['href' => $approve, 'class' => 'btn-approve btn-action']);
+                $action .= html_writer::start_tag('i', ['class' => 'fa fa-check-square', 'aria-hidden' => 'true']);
 
                 $action .= html_writer::end_tag('i');
                 $action .= get_string('approve', 'local_delegate');

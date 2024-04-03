@@ -23,33 +23,28 @@
  */
 
 namespace local_delegate\privacy;
-defined('MOODLE_INTERNAL') || die();
-use \core_privacy\local\metadata\collection;
-use \core_privacy\local\request\contextlist;
-use \core_privacy\local\request\writer;
-use \core_privacy\local\request\approved_contextlist;
+use core_privacy\local\metadata\collection;
+use core_privacy\local\request\contextlist;
+use core_privacy\local\request\writer;
+use core_privacy\local\request\approved_contextlist;
 
-use \core_privacy\local\request\userlist;
-use \core_privacy\local\request\approved_userlist;
-use \core_privacy\manager;
+use core_privacy\local\request\userlist;
+use core_privacy\local\request\approved_userlist;
+use core_privacy\manager;
 
 class provider implements
     // This plugin does not store any personal user data.
     \core_privacy\local\metadata\provider,
     // This plugin is a core_user_data_provider.
     \core_privacy\local\request\plugin\provider,
-    \core_privacy\local\request\core_userlist_provider{
-
+    \core_privacy\local\request\core_userlist_provider {
     /**
      * Get the language string identifier with the component's language
      * file to explain why this plugin stores no data.
      *
      * @return  string
      */
-    
-   
     public static function get_metadata(collection $collection): collection {
-
         $collection->add_database_table(
         'local_delegate',
         [
@@ -68,7 +63,6 @@ class provider implements
         ],
         'privacy:metadata:local_delegate'
         );
-
         return $collection;
     }
     /**
@@ -107,7 +101,6 @@ class provider implements
         if ($context->contextlevel != CONTEXT_SYSTEM) {
             return;
         }
-
         // Delete everything.
         $DB->delete_records('local_delegate', null);
     }
@@ -118,11 +111,9 @@ class provider implements
      */
     public static function delete_data_for_user(approved_contextlist $contextlist) {
         global $DB;
-
         if (empty($contextlist->count())) {
             return;
         }
-
         $user = $contextlist->get_user();
         foreach ($contextlist->get_contexts() as $context) {
             // Check that the context is a system context.
@@ -144,7 +135,6 @@ class provider implements
         if (!$context instanceof \context_system) {
             return;
         }
-
         $userids = $userlist->get_userids();
         list($usersql, $userparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED);
         $DB->delete_records_select('local_delegate', 'delegator '.$usersql, $userparams);
@@ -161,7 +151,6 @@ class provider implements
         $user = $contextlist->get_user();
         $subcontext[] = get_string('pluginname', 'local_delegate');
         $record = $DB->get_record('local_delegate', ['delegator' => $user->id]);
-
         $data = (object) [
             'delegator' => $record->delegator,
             'delegatee' => $record->delegatee,
@@ -174,5 +163,4 @@ class provider implements
             $data
         );
     }
-
 }

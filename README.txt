@@ -9,7 +9,9 @@ This block is written by Sandipa Mukherjee<contact.erudisiya@gmail.com>.
 
 Overview
 --------
-The delegate plugin is a useful solution, with this plugin a delegator can apply for a specific delegatee to the admin. The plugin send email & push notification to the admin for approval. If the admin approves the application then the delegatee and delegator both get an email & push notification.
+The delegate plugin is a useful solution, with this plugin a delegator can apply for a specific delegatee to the admin.
+The plugin send email & push notification to the admin for approval.
+If the admin approves the application then the delegatee and delegator both get an email & push notification.
 
 Setup
 -----
@@ -39,8 +41,10 @@ Go to selected Course that you want to apply for > More > Delegate Application >
 
 How to Approve or Decline
 -------------------------
-Go to selected Course that you want to see > More > Delegate Application > All Application List > Approve or Decline button / click details button and then approve or decline.
+Go to selected Course that you want to see > More > Delegate Application >
+All Application List > Approve or Decline button / click details button and
+then approve or decline.
 
 Uninstall
 ---------
-Admin can uninstall this plugin from- Site administration > Plugins >   > Plugins overview > uninstall [ Delegate Application ].
+Admin can uninstall this plugin from Site administration > Plugins > Plugins overview > uninstall Delegate Application.

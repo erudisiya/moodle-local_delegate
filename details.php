@@ -32,6 +32,7 @@ $PAGE->set_pagelayout('report');
 $PAGE->set_url($CFG->wwwroot."/local/delegate/details.php");
 $PAGE->set_title(get_string('delegatereq', 'local_delegate'));
 $PAGE->set_heading(get_string('delegatereq', 'local_delegate'));
+require_sesskey();
 require_login();
 $id = required_param('id', PARAM_INT);
 $courseid = required_param('courseid', PARAM_INT);
@@ -42,24 +43,24 @@ require_capability('local/delegate:decline', $coursecontext);
 if ($id) {
     if ($action == 'approve') {
         echo $OUTPUT->header();
-        $yesurl = new moodle_url('/local/delegate/approve.php', array('id' => $id, 'action' => 'approve'));
+        $yesurl = new moodle_url('/local/delegate/approve.php', ['id' => $id, 'action' => 'approve']);
         $delegate = local_delegate_get($id);
-        $nourl = new moodle_url('/local/delegate/list.php', array('id' => $delegate->courses));
+        $nourl = new moodle_url('/local/delegate/list.php', ['id' => $delegate->courses]);
         echo $OUTPUT->confirm(get_string('approvestr', 'local_delegate'), $yesurl, $nourl);
         echo $OUTPUT->footer();
         die;
     } else if ($action == 'decline') {
         echo $OUTPUT->header();
         $delegate = local_delegate_get($id);
-        $yesurl = new moodle_url('/local/delegate/decline.php', array('id' => $id, 'action' => 'decline'));
-        $nourl = new moodle_url('/local/delegate/list.php', array('id' => $delegate->courses));
+        $yesurl = new moodle_url('/local/delegate/decline.php', ['id' => $id, 'action' => 'decline']);
+        $nourl = new moodle_url('/local/delegate/list.php', ['id' => $delegate->courses]);
         echo $OUTPUT->confirm(get_string('declinestr', 'local_delegate'), $yesurl, $nourl);
         echo $OUTPUT->footer();
         die;
     }
 
-        $customdata = array('id' => $id);
-        $mform = new delegate_form(null, $customdata);
+    $customdata = ['id' => $id];
+    $mform = new delegate_form(null, $customdata);
 }
 echo $OUTPUT->header();
 $mform->display();
