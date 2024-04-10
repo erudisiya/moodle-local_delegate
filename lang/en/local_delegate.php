@@ -68,6 +68,7 @@ $string['delegate:emailnotifysubmission'] = 'Submission notification';
 $string['delegate:delegateeapprovemail'] = 'Delegatee approve notification';
 $string['delegate:emailconfirmsubmission'] = 'Confirm submission notification';
 $string['delegate:approve'] = 'Approve delegation request';
+$string['delegate:candelegatee'] = 'Listed as delegatee';
 $string['delegate:update'] = 'Update delegate application';
 $string['delegate:delete'] = 'Update delegate application';
 $string['delegate:decline'] = 'Decline delegation request';

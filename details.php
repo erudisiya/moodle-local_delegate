@@ -39,7 +39,7 @@ $PAGE->set_title(get_string('delegatereq', 'local_delegate'));
 $PAGE->set_heading(get_string('delegatereq', 'local_delegate'));
 $PAGE->requires->css('/local/delegate/styles.css');
 require_sesskey();
-require_login();
+require_login($courseid);
 require_capability('local/delegate:view', $coursecontext);
 
 if ($id) {

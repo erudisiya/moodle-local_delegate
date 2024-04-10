@@ -31,7 +31,7 @@ $coursedetails = get_course($courseid);
 $PAGE->set_context(context_course::instance($coursedetails->id));
 $PAGE->set_url($CFG->wwwroot."/local/delegate/list.php");
 $delegate = $DB->get_record('local_delegate', ['id' => $id]);
-
+require_login($courseid);
 $PAGE->navbar->add(get_string("myhome"), new moodle_url('/my'));
 $PAGE->navbar->add($coursedetails->shortname, new moodle_url('/course/view.php?id='.$courseid));
 $PAGE->navbar->add(get_string("list"));
@@ -66,7 +66,7 @@ if ($action == 'approve') {
 
 $PAGE->set_title(get_string('delegatereqlist', 'local_delegate'));
 $PAGE->set_heading(get_string('delegatereqlist', 'local_delegate'));
-require_login();
+
 
 $action = optional_param('action', null, PARAM_TEXT);
 if ($action == 'delete') {

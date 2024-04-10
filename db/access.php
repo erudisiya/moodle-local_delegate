@@ -68,6 +68,14 @@ $capabilities = [
             'manager' => CAP_ALLOW,
         ],
     ],
+    // Capability to approve Delegate applications.
+    'local/delegate:candelegatee' => [
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => [
+            'manager' => CAP_ALLOW,
+        ],
+    ],
     // Capability to decline Delegate applications.
     'local/delegate:decline' => [
         'captype' => 'write',

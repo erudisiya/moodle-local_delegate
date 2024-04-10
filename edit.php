@@ -29,6 +29,7 @@ require_once($CFG->dirroot . '/local/delegate/delegate_application_form.php');
 $id = optional_param('id', 0, PARAM_INT);// Delegatee id.
 $courseid = optional_param('courseid', 0, PARAM_INT);// Course id.
 $coursecontext = context_course::instance($courseid);
+require_login($courseid);
 require_capability('local/delegate:update', $coursecontext);
 $coursedetails = get_course($courseid);
 
@@ -51,7 +52,7 @@ if ($id) {
 $PAGE->set_url($CFG->wwwroot."/local/delegate/list.php");
 
 $PAGE->set_title(get_string('applystr', 'local_delegate'));
-require_login();
+
 $tab = html_writer::start_tag('ul', ['class' => 'rui-nav-tabs nav nav-tabs']);
     $tab .= html_writer::start_tag('li', ['class' => 'nav-item']);
         $tab .= html_writer::start_tag('a', ['class' => 'nav-link', 'title' => "All Application List", 'href' => $form]);
