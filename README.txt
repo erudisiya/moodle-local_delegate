@@ -26,6 +26,7 @@ local/delegate:decline
 local/delegate:emailnotifysubmission
 local/delegate:emailconfirmsubmission
 local/delegate:delegateeapprovemail
+local/delegate:candelegatee
 
 Source Control
 --------------
