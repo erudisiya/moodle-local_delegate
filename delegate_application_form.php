@@ -41,7 +41,8 @@ class delegate_application_form extends moodleform {
             }
             $coursedetails = get_course($courseid);
             $mform->addElement('static', 'textcourses', get_string('courses', 'local_delegate'), $coursedetails->fullname);
-            $delegetees = get_users_by_capability(context_course::instance($coursedetails->id), 'local/delegate:candelegatee', 'u.*');
+            $delegetees = get_users_by_capability(context_course::instance(
+                $coursedetails->id), 'local/delegate:candelegatee', 'u.*');
             foreach ($delegetees as $userid => $delegete) {
                 if ($delegete->id !== $USER->id) {
                     $delegatee[$delegete->id] = fullname($delegete);
