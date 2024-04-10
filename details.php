@@ -25,20 +25,22 @@
 require_once(__DIR__ . '/../../config.php');
 GLOBAL $DB, $CFG;
 require_once($CFG->dirroot . '/local/delegate/lib.php');
-$PAGE->requires->css('/local/delegate/styles.css');
+require_once("$CFG->libdir/formslib.php");
 require_once($CFG->dirroot . '/local/delegate/details_form.php');
-
-$PAGE->set_pagelayout('report');
-$PAGE->set_url($CFG->wwwroot."/local/delegate/details.php");
-$PAGE->set_title(get_string('delegatereq', 'local_delegate'));
-$PAGE->set_heading(get_string('delegatereq', 'local_delegate'));
-require_sesskey();
-require_login();
 $id = required_param('id', PARAM_INT);
 $courseid = required_param('courseid', PARAM_INT);
 $action = optional_param('action', null, PARAM_TEXT);
 $coursecontext = context_course::instance($courseid);
-require_capability('local/delegate:decline', $coursecontext);
+$coursedetails = get_course($courseid);
+$PAGE->set_context(context_course::instance($coursedetails->id));
+$PAGE->set_pagelayout('report');
+$PAGE->set_url($CFG->wwwroot."/local/delegate/details.php");
+$PAGE->set_title(get_string('delegatereq', 'local_delegate'));
+$PAGE->set_heading(get_string('delegatereq', 'local_delegate'));
+$PAGE->requires->css('/local/delegate/styles.css');
+require_sesskey();
+require_login();
+require_capability('local/delegate:view', $coursecontext);
 
 if ($id) {
     if ($action == 'approve') {

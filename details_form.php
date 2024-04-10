@@ -21,14 +21,6 @@
  * @copyright 2023 Sandipa Mukherjee {contact.erudisiya@gmail.com}
  * @license   http://www.gnu.org/copyleft/gpl.html +GNU GPL v3 or later
  */
-
-require_once(__DIR__ . '/../../config.php');
-GLOBAL $DB, $CFG;
-$PAGE->set_pagelayout('report');
-$PAGE->set_context(context_system::instance());
-require_login();
-require_once("$CFG->libdir/formslib.php");
-
 class delegate_form extends moodleform {
     // Add elements to form.
     public function definition() {
