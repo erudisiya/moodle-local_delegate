@@ -5,13 +5,17 @@ Installation
 ------------
 Go to [ Site administration > Plugins(Plugins) > Install plugins ] and just upload or drag & drop downloaed ZIP file.
 To install, place all downloaded files in /local/delegate and visit /admin/index.php in your browser.
-This block is written by Sandipa Mukherjee<contact.erudisiya@gmail.com>.
+This local plugin is written by Sandipa Mukherjee<contact.erudisiya@gmail.com>.
 
 Overview
 --------
-The delegate plugin is a useful solution, with this plugin a delegator can apply for a specific delegatee to the admin.
-The plugin send email & push notification to the admin for approval.
-If the admin approves the application then the delegatee and delegator both get an email & push notification.
+As a result of a mutual discussion between a delegator and delegatee,
+the delegator gives his responsibility to the delegatee.
+With this plugin the delegator ie. a teacher / non-editing-teacher / the equivalent
+role can ask the admin to delegate their responsibility of any course,
+to the delegatee ie. the other teacher / non-editing-teacher / the equivalent role
+who both have been already enrolled in the same course.
+Admin can accept or decline requests by delegator. With this plugin, the admin knows who wants to take leave.
 
 Setup
 -----
